@@ -1,0 +1,52 @@
+/* You can add global styles to this file, and also import other style files */
+@import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+
+.navbar {
+  background-color: #f8f9fa; /* Helles Grau für modernes Look */
+  border-bottom: 1px solid #dee2e6; /* Dünner unterer Rand */
+}
+
+.navbar .navbar-brand {
+  color: #333; /* Dunkler, neutraler Farbton */
+  font-size: 1.5rem;
+}
+
+.navbar .navbar-nav .nav-link {
+  color: #555; /* Neutrale Textfarbe */
+  font-weight: 500;
+  padding: 10px 15px;
+}
+
+.navbar .navbar-nav .nav-link:hover {
+  background-color: #e9ecef; /* Dezentes Hover, heller Hintergrund */
+  border-radius: 5px; /* Abgerundete Ecken für modernen Touch */
+}
+
+.navbar .navbar-nav .nav-link.active {
+  color: #0d6efd; /* Modernes Blau für aktive Links */
+  font-weight: 600;
+}
+
+.navbar-toggler {
+  border-color: #ddd; /* Heller Toggler-Button */
+}
+
+.navbar-toggler:hover {
+  background-color: #e9ecef; /* Leichtes Grau für Toggler-Hover */
+}
+
+.shadow-sm {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); /* Sanfter Schatten unter der Navbar */
+}
+
+.container-fluid {
+  max-width: 1200px;
+}
+
+/* Responsive Anpassungen für mobile Geräte */
+@media (max-width: 768px) {
+  .navbar-nav .nav-link {
+    text-align: center;
+    padding: 12px 0;
+  }
+}
