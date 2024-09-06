@@ -1,6 +1,7 @@
 import {PartyAdmin} from "./party-admin";
 
 export interface Party {
+  id?: number;
 
   // Generall Event information
   name?: string,

@@ -1,19 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {FormsModule} from "@angular/forms";
-import {CommonModule} from "@angular/common";
 import {Party} from "../../models/party";
-import {HttpClientModule} from "@angular/common/http";
 import {HttpService} from "../../services/http.service";
 
 @Component({
   selector: 'app-admin',
-  standalone: true,
-  imports: [
-    FormsModule,
-    CommonModule
-  ],
   templateUrl: './admin.component.html',
-  styleUrl: './admin.component.scss'
+  styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent implements OnInit{
 
@@ -27,6 +19,18 @@ export class AdminComponent implements OnInit{
 
   // NgOnInit Prepare All Data
   ngOnInit(): void {
+    this.loadData();
+  }
+
+  loadData() {
+    this.http.getAllParties().subscribe({
+      next: data => {
+        this.partyList = data;
+      },
+      error: err => {
+        console.log(err)
+      }
+    })
   }
 
   // Posting a new Party
@@ -34,7 +38,15 @@ export class AdminComponent implements OnInit{
 
     this.http.postParty(this.newParty).subscribe({
       next: data => {
-        this.partyList.push(data);
+
+        var tmp = this.partyList.find(element => element.id === data.id);
+
+        if(tmp === null || tmp === undefined) {
+          this.partyList.push(data);
+        }else{
+          tmp = data;
+        }
+
         this.newParty = {partyAdmin: {}};
       },
       error: err => {
@@ -44,7 +56,13 @@ export class AdminComponent implements OnInit{
 
   }
 
+  resetParty() {
+    this.newParty = {partyAdmin: {}};
+  }
+
   editFest(party: any) {
     this.newParty = party
   }
+
+
 }

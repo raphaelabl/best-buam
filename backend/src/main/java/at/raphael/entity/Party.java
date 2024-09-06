@@ -6,6 +6,7 @@ import jakarta.persistence.OneToOne;
 
 import java.util.Date;
 
+
 @Entity
 public class Party extends PanacheEntity {
 

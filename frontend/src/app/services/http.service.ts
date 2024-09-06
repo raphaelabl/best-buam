@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpClientModule} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {Party} from "../models/party";
 import {environment} from "../../environments/environment";
 import {Observable} from "rxjs";
@@ -13,7 +13,11 @@ export class HttpService {
 
   // Party Resources
   postParty(party: Party): Observable<Party> {
-    return this.http.post(environment.API_URL + "/party", party)
+    return this.http.post(environment.API_URL + "party", party)
+  }
+
+  getAllParties(): Observable<Party[]>{
+    return this.http.get<Party[]>(environment.API_URL + "party");
   }
 
 }
