@@ -57,3 +57,18 @@ If you want to learn more about building native executables, please consult <htt
 
 - REST resources for Hibernate ORM with Panache ([guide](https://quarkus.io/guides/rest-data-panache)): Generate Jakarta REST resources for your Hibernate Panache entities and repositories
 - JDBC Driver - PostgreSQL ([guide](https://quarkus.io/guides/datasource)): Connect to the PostgreSQL database via JDBC
+
+## Provided Code
+
+### REST Data with Panache
+
+Generating Jakarta REST resources with Panache
+
+[Related guide section...](https://quarkus.io/guides/rest-data-panache)
+
+
+### RESTEasy JAX-RS
+
+Easily start your RESTful Web Services
+
+[Related guide section...](https://quarkus.io/guides/getting-started#the-jax-rs-resources)
