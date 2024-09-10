@@ -14,7 +14,9 @@ export class AdminComponent implements OnInit{
   partyList: Party[] = [];
 
   newParty: Party = {
-    partyAdmin: {}
+    partyAdmin: {},
+    buffets: [],
+    waiters: []
   };
 
   // NgOnInit Prepare All Data
@@ -39,15 +41,18 @@ export class AdminComponent implements OnInit{
     this.http.postParty(this.newParty).subscribe({
       next: data => {
 
-        var tmp = this.partyList.find(element => element.id === data.id);
+        let index = this.partyList.findIndex(element => element.id === data.id);
 
-        if(tmp === null || tmp === undefined) {
-          this.partyList.push(data);
+        if(index === null || index === undefined || index === -1) {
+          this.partyList = [...this.partyList,data];
         }else{
-          tmp = data;
+          this.partyList[index] = data;
         }
 
-        this.newParty = {partyAdmin: {}};
+        this.newParty = {
+          partyAdmin: {},
+          buffets: [],
+          waiters: []};
       },
       error: err => {
         console.log(err)
@@ -57,11 +62,16 @@ export class AdminComponent implements OnInit{
   }
 
   resetParty() {
-    this.newParty = {partyAdmin: {}};
+    this.newParty = {
+      partyAdmin: {},
+      buffets: [],
+      waiters: []
+    };
   }
 
   editFest(party: any) {
-    this.newParty = party
+    console.log(party)
+    this.newParty = {...party, partyAdmin: {...party.partyAdmin}}
   }
 
 

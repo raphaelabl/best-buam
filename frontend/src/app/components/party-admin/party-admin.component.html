@@ -1,0 +1,141 @@
+<div class="container mt-5">
+  <h1 class="display-4 text-center">Fest Admin Bereich - {{selectedParty.name}}</h1>
+  <hr>
+  <ng-container *ngIf="selectedParty.id === null || selectedParty.id === undefined || selectedParty.id === 0">
+    <div class="card mt-3">
+      <div class="card-header">
+        <h3>Fest Auswählen</h3>
+      </div>
+      <div class="card-body">
+
+        <div class="mt-4">
+          <h4>Liste der geplanten Feste</h4>
+          <ul class="list-group">
+            <li class="list-group-item" *ngFor="let party of planedParties" (click)="selectedParty = party">
+              <strong>{{ party.name }}</strong>: {{ formatDate(party.startDate) }} - {{ formatDate(party.endDate) }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="selectedParty.id !== null && selectedParty.id !== undefined && selectedParty.id !== 0">
+  <!-- Kellner verwalten -->
+  <div class="card mt-3">
+    <div class="card-header">
+      <h3>Kellner verwalten</h3>
+    </div>
+    <div class="card-body">
+      <form (ngSubmit)="manageWaiters()" (reset)="newWaiter = {}">
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <label for="waiterFirstName" class="form-label">Vorname</label>
+            <input type="text" id="waiterFirstName" class="form-control" [(ngModel)]="newWaiter.firstName" name="waiterFirstName" required>
+          </div>
+          <div class="col-md-4">
+            <label for="waiterLasttName" class="form-label">Nachname</label>
+            <input type="text" id="waiterLasttName" class="form-control" [(ngModel)]="newWaiter.lastName" name="waiterLasttName" required>
+          </div>
+          <div class="col-md-4">
+            <label for="waiterLoginEmail" class="form-label">Email</label>
+            <input type="text" id="waiterLoginEmail" class="form-control" [(ngModel)]="newWaiter.email" name="waiterLoginEmail" required>
+          </div>
+          <div class="col-md-4">
+            <label for="waiterUsername" class="form-label">Username für Login</label>
+            <input type="text" id="waiterUsername" class="form-control" [(ngModel)]="newWaiter.username" name="waiterUsername" required>
+          </div>
+          <div class="col-md-4">
+            <label for="waiterPassword" class="form-label">Passwort für Login</label>
+            <div class="d-flex">
+              <input [type]="(!showUserPw)?'password':'text'" id="waiterPassword" class="form-control" [(ngModel)]="newWaiter.password" name="waiterPassword" required>
+              <button type="button" class="btn" (click)="showUserPw = !showUserPw"><i class="fa fa-eye" *ngIf="!showUserPw"></i><i class="fa fa-eye-slash" *ngIf="showUserPw"></i></button>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label for="role" class="form-label">Rolle</label>
+            <select id="role" class="form-select" [(ngModel)]="newWaiter.role" name="role" required>
+              <option value="Bestellung">Bestellung</option>
+              <option value="Bringer">Bringer</option>
+            </select>
+          </div>
+        </div>
+        <div class="d-flex justify-content-around">
+          <button type="submit" class="btn btn-primary">{{newWaiter.id === null || newWaiter.id === undefined || newWaiter.id === 0? "Kellner anlegen":"Kellner Bearbeiten"}}</button>
+          <button type="reset" class="btn btn-danger">Abbrechen</button>
+        </div>
+      </form>
+
+      <!-- Kellner Liste -->
+      <div class="mt-4"  style=" max-height: 300px; overflow-y: auto;">
+        <h4>Aktuelle Kellner</h4>
+        <ul class="list-group">
+          <li class="list-group-item" *ngFor="let waiter of selectedParty.waiters" (click)="editWaiter(waiter.id!)">
+            <strong>{{ waiter.firstName + " " + waiter.lastName + ": " + waiter.username}}</strong> - {{ waiter.role }}
+            <button class="btn btn-danger btn-sm float-end" (click)="removeWaiter(waiter.id!)">Entfernen</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ausgabe-Positionen verwalten -->
+  <div class="card mt-5">
+    <div class="card-header">
+      <h3>Ausgaben verwalten</h3>
+    </div>
+    <div class="card-body">
+      <form (ngSubmit)="manageBuffet()" (reset)="newBuffet = { items: [], printers: []}">
+        <div class="row mb-3">
+          <div class="col-md-12">
+            <label for="itemName" class="form-label">Name der Ausgabe</label>
+            <input type="text" id="itemName" class="form-control" [(ngModel)]="newBuffet.name" name="name" required>
+          </div>
+        </div>
+        <div class="d-flex justify-content-around">
+          <button type="submit" class="btn btn-primary">{{newBuffet.id === null || newBuffet.id === undefined || newBuffet.id === 0? "Ausgabe anlegen":"Ausgabe Bearbeiten"}}</button>
+          <button type="reset" class="btn btn-danger">Abbrechen</button>
+        </div>
+      </form>
+
+      <!-- Ausgabe Liste -->
+      <div class="mt-4">
+        <h4>Ausgaben</h4>
+        <ul class="list-group">
+          <li class="list-group-item" *ngFor="let buffet of selectedParty.buffets" (click)="editBuffetInDialog(buffet.id!)">
+            <strong>{{ buffet.name }}</strong>
+            <button class="btn btn-danger btn-sm float-end" (click)="removeBuffet(buffet.id!)">Entfernen</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rechnungs-Drucker -->
+
+
+
+  <!-- Abrechnungen sehen -->
+  <div class="card mt-5">
+    <div class="card-header">
+      <h3>Abrechnungen sehen</h3>
+    </div>
+    <div class="card-body">
+      <h4>Verkaufte Artikel</h4>
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>Artikel</th>
+          <th>Verkäufe</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of salesData">
+          <td>{{ item.name }}</td>
+          <td>{{ item.count }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  </ng-container>
+</div>

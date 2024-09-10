@@ -1,4 +1,4 @@
-package boundary;
+package at.raphael.boundary;
 
 import at.raphael.entity.Party;
 import jakarta.transaction.Transactional;
@@ -21,11 +21,27 @@ public class PartyResource {
         return Response.ok(party).build();
     }
 
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getParty() {
         List<Party> partyList = Party.listAll();
+        return Response.ok(partyList).build();
+    }
+
+    @GET
+    @Path("id")
+    public Response getBuffetById(@QueryParam("id") long id) {
+        Party party = Party.findById(id);
+        return Response.ok(party).build();
+    }
+
+
+    @GET
+    @Path("adminEmail")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPartyByAdmin(@QueryParam("adminEmail") String adminEmail) {
+        List<Party> partyList = Party.find("partyAdmin.email", adminEmail).list();
+
         return Response.ok(partyList).build();
     }
 
