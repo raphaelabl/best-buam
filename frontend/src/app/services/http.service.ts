@@ -1,10 +1,9 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Party} from "../models/party";
 import {environment} from "../../environments/environment";
 import {Observable} from "rxjs";
 import {Buffet} from "../models/buffet";
-import {Item} from "../models/item";
 import {Order} from "../models/order";
 
 @Injectable({
@@ -12,7 +11,9 @@ import {Order} from "../models/order";
 })
 export class HttpService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    console.log(environment.API_URL)
+  }
 
   // Party Resources
   postParty(party: Party): Observable<Party> {
@@ -39,6 +40,10 @@ export class HttpService {
   // Order Resource
   postOrder(newOrder: Order): Observable<Order>{
     return this.http.post<Order>(environment.API_URL + "order", newOrder)
+  }
+
+  getOrders(): Observable<Order[]>{
+    return this.http.get<Order[]>(environment.API_URL + "order");
   }
 
 }

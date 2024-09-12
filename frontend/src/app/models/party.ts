@@ -1,4 +1,6 @@
 import {PartyAdmin} from "./party-admin";
+import {Waiter} from "./waiter";
+import {Buffet} from "./buffet";
 
 export interface Party {
   id?: number;
@@ -7,6 +9,9 @@ export interface Party {
   name?: string,
   organization?: string,
   partyAdmin?: PartyAdmin,
+
+  waiters: Waiter[];
+  buffets: Buffet[];
 
   // Date from - to the waiters can access
   startDate?: Date,

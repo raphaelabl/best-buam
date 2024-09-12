@@ -1,0 +1,99 @@
+<div class="container mt-3">
+  <div style="margin-bottom: 1rem">
+    <div class="form-group">
+      <label for="quantity">Tischnummer</label>
+      <input type="text" id="tableNr" class="form-control" [(ngModel)]="newOrder.tableNr">
+    </div>
+  </div>
+  <div *ngIf="newOrder.tableNr !== null && newOrder.tableNr !== undefined && newOrder.tableNr !== 0">
+    <h2 class="text-center">Kellner: Bestellungen aufnehmen</h2>
+
+    <!-- Artikel Liste für Bestellung -->
+    <div class="card mt-4">
+      <div class="card-header">
+        <h3>Artikel wählen</h3>
+      </div>
+      <div class="card-body" style=" max-height: 300px; overflow-y: auto;">
+        <div style="display: flex; flex-direction: row; justify-content: space-around" >
+          <button class="btn btn-primary" (click)="selectedBuffet = buffet" *ngFor="let buffet of currentParty.buffets">{{buffet.name}}</button>
+        </div>
+        <hr>
+        <div class="list-group">
+          <div *ngFor="let item of selectedBuffet.items" style="display: inline-flex; flex-direction: row; align-items: center; justify-content: space-between">
+            <button class="list-group-item list-group-item-action"
+                    (click)="addToOrder({item})">
+              {{ item.name }} - {{ item.price | currency:'EUR' }}
+            </button>
+            <button class="btn btn-sm btn-warning" style="margin-top:0 !important; margin-left: 1rem;"  (click)="specialOrder({item: item})"><i class="fa fa-edit"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Aktuelle Bestellung -->
+    <div class="card mt-4">
+      <div class="card-header">
+        <h3>Aktuelle Bestellung</h3>
+      </div>
+      <div class="card-body">
+        <ul class="list-group" >
+          <li class="list-group-item" *ngFor="let order of newOrder!.positions" style="display: inline-flex; flex-direction: row; align-items: center; justify-content: space-between">
+            {{ order.item!.name }} - {{ (order.item!.price! * order.amount!) | currency:'EUR' }}
+            {{order.spezialText?.substring(0,10)}}
+            <div style="display: flex; justify-content: space-between;">
+              <button class="btn btn-sm btn-success" style="margin-top:0 !important; margin-left: 0.5rem;" (click)="addToOrder(order)"><i class="fa fa-add"></i></button>
+              <button *ngIf="order.isSpezial" class="btn btn-sm btn-warning" style="margin-top:0 !important; margin-left: 0.5rem;" (click)="specialOrder(order)"><i class="fa fa-edit"></i></button>
+              <button class="btn btn-sm btn-danger" style="margin-top:0 !important; margin-left: 0.5rem;" (click)="removeOrderPostion(order.editId!)"><i class="fa fa-minus"></i></button>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bearbeitungsdialog für spezielle Artikel -->
+    <ng-template #editOrderTemplate>
+      <h3 class="text-center">Artikel bearbeiten</h3>
+      <div class="form-group">
+        <label for="quantity">Artikel</label>
+        <input type="text" id="item" class="form-control" [(ngModel)]="specialOrderPosition.item!.name">
+      </div>
+      <div class="form-group">
+        <label for="quantity">Anzahl</label>
+        <input type="number" id="quantity" class="form-control" [(ngModel)]="specialOrderPosition.amount">
+      </div>
+      <div class="form-group mt-2">
+        <label for="specialText">Spezialtext</label>
+        <textarea id="specialText" class="form-control" [(ngModel)]="specialOrderPosition.spezialText"></textarea>
+      </div>
+      <button class="btn btn-success mt-3" (click)="closeDialogs()">Änderungen speichern</button>
+    </ng-template>
+
+    <Button class="btn btn-primary" (click)="openDialog()">Bezahlen</Button>
+    <!-- Bezahlung -->
+    <ng-template #payPopUp style="background: transparent!important;">
+      <div class="card mt-4">
+        <div class="card-header">
+          <h3>Bezahlung</h3>
+        </div>
+        <div class="card-body">
+          <h4>Gesamtsumme: {{ getTotal() | currency:'EUR' }}</h4>
+          <div class="form-group mt-3">
+            <label for="paidAmount">Erhaltenes Geld</label>
+            <input type="number" id="paidAmount" class="form-control" [(ngModel)]="paidAmount">
+          </div>
+          <div class="change-system">
+            <h3>Zurück: {{(paidAmount - getTotal() > 0)?paidAmount - getTotal():0}}€</h3>
+            <ul>
+              <li *ngFor="let option of changeSteps; let i = index">
+                <span *ngIf="getChangeArray()[i] > 0">
+                  {{ getChangeArray()[i]! }} x <img style="height: 1rem" [src]="'assets/'+option.toString().replace('.', '_')+'.png'">
+                </span>
+              </li>
+            </ul>
+          </div>
+          <button class="btn btn-primary mt-3" (click)="completePayment()">Bezahlt</button>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>

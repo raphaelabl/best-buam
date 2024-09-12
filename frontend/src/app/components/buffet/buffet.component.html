@@ -1,0 +1,30 @@
+<div class="container mt-3">
+  <h2 class="text-center">Ausschank - Aktuelle Bestellungen</h2>
+
+  <!-- Bestellungen als Cards anzeigen -->
+  <div class="row">
+    <div class="col-md-4 mb-3" *ngFor="let order of orders">
+      <div class="card" [ngClass]="{ 'in-progress': order.preparationStatus === 1, 'completed': order.preparationStatus === 2 }">
+        <div class="card-header">
+          <h4>Bestellung #{{ order.id }}</h4>
+        </div>
+        <div class="card-body">
+          <ul class="list-group">
+            <li class="list-group-item" *ngFor="let position of order.positions">
+              {{ position.item!.name }} x{{ position.amount }}
+              <span *ngIf="position.isSpezial">({{ position.spezialText }})</span>
+            </li>
+          </ul>
+        </div>
+        <div class="card-footer">
+          <button class="btn btn-warning" *ngIf="order.preparationStatus === 0" (click)="setInProgress(order.id!)">
+            In Bearbeitung setzen
+          </button>
+          <button class="btn btn-danger" *ngIf="order.preparationStatus === 1" (click)="completeOrder(order.id!)">
+            Auftrag beenden & Rechnung drucken
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

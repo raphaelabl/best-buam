@@ -1,7 +1,7 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { AdminComponent } from './components/admin/admin.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {AdminComponent} from './components/admin/admin.component';
+import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {PartyAdminComponent} from "./components/party-admin/party-admin.component";
 import {WaiterComponent} from "./components/waiter/waiter.component";
 import {BuffetComponent} from "./components/buffet/buffet.component";

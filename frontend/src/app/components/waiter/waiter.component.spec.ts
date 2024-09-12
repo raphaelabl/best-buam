@@ -1,20 +1,20 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {PartyAdminComponent} from './party-admin.component';
+import {WaiterComponent} from './waiter.component';
 
-describe('PartyAdminComponent', () => {
-  let component: PartyAdminComponent;
-  let fixture: ComponentFixture<PartyAdminComponent>;
+describe('WaiterComponent', () => {
+  let component: WaiterComponent;
+  let fixture: ComponentFixture<WaiterComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PartyAdminComponent ]
+      declarations: [ WaiterComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PartyAdminComponent);
+    fixture = TestBed.createComponent(WaiterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
