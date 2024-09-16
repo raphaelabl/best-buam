@@ -1,0 +1,50 @@
+.container {
+  max-width: 100%;
+}
+
+
+.list-group-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn {
+  margin-top: 10px;
+}
+
+.form-control {
+  font-size: 16px;
+}
+
+@media (max-width: 576px) {
+  h2, h3, h4, h5 {
+    font-size: 1.2rem;
+  }
+}
+
+
+.change-system {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+.change-system h3 {
+  font-size: 1.5em;
+}
+
+.change-system ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.change-system ul li {
+  font-size: 1.2em;
+  margin: 5px 0;
+}
+
+.change-system .total {
+  margin-top: 15px;
+  font-weight: bold;
+  font-size: 1.3em;
+}

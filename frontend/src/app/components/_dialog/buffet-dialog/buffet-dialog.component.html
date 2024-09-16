@@ -1,0 +1,87 @@
+<h1 mat-dialog-title>Ausgabe-Position bearbeiten</h1>
+
+
+<div class="card mt-5">
+  <div class="card-header">
+    <h3>Ausgaben verwalten</h3>
+  </div>
+  <div class="card-body">
+    <form>
+      <div class="row mb-3">
+        <div class="col-md-12">
+          <label for="buffetName" class="form-label">Name der Ausgabe</label>
+          <input [(ngModel)]="newBuffet!.name" type="text" id="buffetName" class="form-control" name="buffetName" required>
+        </div>
+      </div>
+    </form>
+  </div>
+    <!-- Aritkle Liste -->
+  <div class="card-body">
+    <h1>Artikel Bearbeiten</h1>
+    <hr>
+    <form (ngSubmit)="manageItem()" (reset)="newItem = {}">
+      <div class="row mb-3">
+        <div style="display: flex; justify-content: space-around; align-content: center">
+        <div class="col-md-5">
+          <label for="itemName" class="form-label">Name des Artikels</label>
+          <input [(ngModel)]="newItem!.name" type="text" id="itemName" class="form-control" name="itemName" required>
+        </div>
+        <div class="col-md-3">
+          <label for="itemPrice" class="form-label">Preis</label>
+          <input [(ngModel)]="newItem!.price" type="number" id="itemPrice" class="form-control" name="itemPrice" required>
+        </div>
+        <div style="display: flex; justify-content: space-around; align-items: center; width: 10rem">
+          <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i></button>
+          <button type="reset" class="btn btn-danger"><i class="fa fa-close"></i></button>
+        </div>
+        </div>
+      </div>
+    </form>
+
+    <div class="mt-4">
+      <h3>Verfügbare Artikel</h3>
+      <ul class="list-group">
+        <li class="list-group-item" *ngFor="let item of newBuffet!.items" (click)="editItem(item.id!)">
+          <strong>{{item.name}}</strong> {{item.price}}
+          <button class="btn btn-danger btn-sm float-end" (click)="removeItem(item!.id!)">Entfernen</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <h1>Drucker Bearbeiten</h1>
+    <hr>
+    <form (ngSubmit)="managePrinter()">
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="printerName" class="form-label">Name des Druckers</label>
+          <input type="text" id="printerName" class="form-control" [(ngModel)]="newPrinter!.name" name="name" required>
+        </div>
+        <div class="col-md-6">
+          <label for="printerIpAdresse" class="form-label">Ip-Addresse des Druckers</label>
+          <input type="text" id="printerIpAdresse" class="form-control" [(ngModel)]="newPrinter!.ipAddress" name="printerIpAdresse" required>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Drucker hinzufügen</button>
+    </form>
+
+    <!-- Drucker Liste -->
+    <div class="mt-4">
+      <h4>Verfügbare Drucker</h4>
+      <ul class="list-group">
+        <li class="list-group-item" *ngFor="let printer of newBuffet!.printers" (click)="editPrinter(printer.id!)">
+          <strong>{{ printer.name }}</strong>
+          <button class="btn btn-info btn-sm float-end" (click)="testPrinter(printer.id!)">Testdruck</button>
+          <button class="btn btn-danger btn-sm float-end me-2" (click)="removePrinter(printer.id!)">Entfernen</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-around">
+    <button type="submit" class="btn btn-primary">{{newBuffet!.id === null || newBuffet!.id === undefined || newBuffet!.id === 0? "Ausgabe anlegen":"Ausgabe Bearbeiten"}}</button>
+    <button type="reset" class="btn btn-danger">Abbrechen</button>
+  </div>
+
+</div>

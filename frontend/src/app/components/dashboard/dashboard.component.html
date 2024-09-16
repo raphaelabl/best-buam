@@ -1,0 +1,41 @@
+<!-- dashboard.component.html -->
+<div class="container-fluid mt-4">
+  <h1 class="display-4 text-center">Dashboard</h1>
+
+  <div class="row mt-5">
+    <!-- Kellner-Rufen Bereich -->
+    <div class="col-12 col-md-6 mb-4">
+      <div class="card shadow-sm p-4">
+        <h3>Kellner-Rufe</h3>
+        <ul class="list-group list-group-flush" *ngIf="waiterRequests.length > 0; else noRequests">
+          <li class="list-group-item" *ngFor="let request of waiterRequests">
+            Tisch {{ request.tableNumber }} benötigt einen Kellner
+          </li>
+        </ul>
+        <ng-template #noRequests>
+          <p class="text-muted">Keine aktuellen Kellner-Rufe.</p>
+        </ng-template>
+      </div>
+    </div>
+
+    <!-- Donut-Diagramm für Verkaufsstatistiken -->
+    <div class="col-12 col-md-6 mb-4">
+      <div class="card shadow-sm p-4">
+        <h3>Verkaufsstatistiken</h3>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Einnahmen-Anzeige -->
+    <div class="col-12 col-md-6 mb-4">
+      <div class="card shadow-sm p-4 text-center">
+        <h3>Einnahmen</h3>
+        <p class="display-4">{{ totalRevenue + 'EUR' }}</p>
+      </div>
+    </div>
+
+    <!-- Weitere Komponenten können hier hinzugefügt werden -->
+  </div>
+</div>
