@@ -9,7 +9,7 @@ import {FormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import {PartyAdminComponent} from './components/party-admin/party-admin.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MatDialogModule} from "@angular/material/dialog";
+import {MatLegacyDialogModule as MatDialogModule} from "@angular/material/legacy-dialog";
 import {BuffetDialogComponent} from './components/_dialog/buffet-dialog/buffet-dialog.component';
 import {WaiterComponent} from './components/waiter/waiter.component';
 import {BuffetComponent} from './components/buffet/buffet.component';
