@@ -10,9 +10,6 @@ import java.util.List;
 public class OrderSessions {
     public Session session;
     public Buffet buffet;
-    public List<BuffetOrderDTO> ordersToDo;
 
-    public OrderSessions() {
-        ordersToDo = new ArrayList<>();
-    }
+    public OrderSessions() {}
 }

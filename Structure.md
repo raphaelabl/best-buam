@@ -1,7 +1,23 @@
 ## Bestö Buam
 
+### LIVE TODO
+-------------
+ - TODO
+    ----- 
 
-### Admin Page:
+- Keycloak Benutzer über Quarkus Anlegen
+
+ - DONE
+    ----- 
+- Anzahl in Bestellübersicht anzeigen
+- Popup nach bezahlen schließen wenn erfolgreich
+- Buffet Ordentlich machen und Praktischer
+- Buffet wenn schließen oder neuladen vom fenster bestellungen behalten und wieder neu anzeigen
+
+
+### STRUKTUR
+------------
+#### Admin Page:
 - Liste aller aktuellen Feste
     - Bearbeitungs Button für Einstellungen !
 - Neues Fest anlegen
@@ -20,7 +36,7 @@
 - ...
 - Backdoor is eh kloor :-D
 
-### Fest Admin:
+#### Fest Admin:
 - Dashboard
     - Nützliche übersichten 
     - ...
@@ -46,7 +62,7 @@
 
 - Gimick steuerung
 
-### Kellner:
+#### Kellner:
 - Aufnahme Bestellungen
     - Klick auf Artikeln für hinzufügen weiterm Artikels
         - Bearbeiten für spezielle Artikel
@@ -59,7 +75,7 @@
         - Rückgeld ausrechnen
             - In scheinen und Müntzenv
 
-### Ausgabe Positionen (zB Ausschank ...)
+#### Ausgabe Positionen (zB Ausschank ...)
 - Anzeige Bestellte Artikel
     - Id-Anzeige zu übersichtbarkeit
     - Was wie oft + Zusatz
@@ -69,6 +85,6 @@
         - Rechnungsdruck
 
 
-### !!! Gimicks !!!
+#### !!! Gimicks !!!
 - Wird nu überlegt
 - Popups bei bestimmten bestellungen

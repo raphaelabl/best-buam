@@ -1,4 +1,6 @@
-<div class="container mt-3">
+<input type="text" [(ngModel)]="buffetName">
+<button (click)="buffetNameInputed()">clis</button>
+<div class="container mt-3" *ngIf="buffetName !== ''">
   <h2 class="text-center">Ausschank - Aktuelle Bestellungen</h2>
 
   <!-- Bestellungen als Cards anzeigen -->
@@ -6,7 +8,7 @@
     <div class="col-md-4 mb-3" *ngFor="let order of orders">
       <div class="card" [ngClass]="{ 'in-progress': order.order.preparationStatus === 1, 'completed': order.order.preparationStatus === 2 }">
         <div class="card-header">
-          <h4>Bestellung #{{ order.id }}</h4>
+          <h4>Bestellung Nr.{{ order.id.split("_")[1] }} TischNr. {{order.order.tableNr}}</h4>
         </div>
         <div class="card-body">
           <ul class="list-group">

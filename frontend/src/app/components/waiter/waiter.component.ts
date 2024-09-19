@@ -16,14 +16,11 @@ export class WaiterComponent implements OnInit {
   currentParty: Party = {waiters: [], buffets: []};
   selectedBuffet: Buffet = {items: [], printers: []};
 
-  newOrder: Order = {positions: [], waiter: {}};
+  newOrder: Order = {tableNr: 12,positions: [], waiter: {}};
   specialOrderPosition: OrderPosition = { item: {}, amount: 0}
 
   changeSteps: number[] = [0.50,1,2,5,10,20,50,100];
   paidAmount = 0;
-
-
-  payed = false;
 
   @ViewChild('editOrderTemplate') editOrderTemplate!: TemplateRef<any>;
   @ViewChild('payPopUp') payPopUp!: TemplateRef<any>;
@@ -151,7 +148,7 @@ export class WaiterComponent implements OnInit {
 
     this.http.postOrder(this.newOrder).subscribe({
         next: data => {
-          alert("Bestellung wurde abgegeben")
+          this.closeDialogs()
 
           this.newOrder = {positions: [], waiter: {}};
           this.paidAmount = 0;

@@ -38,7 +38,7 @@
       <div class="card-body">
         <ul class="list-group" >
           <li class="list-group-item" *ngFor="let order of newOrder!.positions" style="display: inline-flex; flex-direction: row; align-items: center; justify-content: space-between">
-            {{ order.item!.name }} - {{ (order.item!.price! * order.amount!) | currency:'EUR' }}
+            {{order.amount}} x {{ order.item!.name }} - {{ (order.item!.price! * order.amount!) | currency:'EUR' }}
             {{order.spezialText?.substring(0,10)}}
             <div style="display: flex; justify-content: space-between;">
               <button class="btn btn-sm btn-success" style="margin-top:0 !important; margin-left: 0.5rem;" (click)="addToOrder(order)"><i class="fa fa-add"></i></button>
@@ -92,6 +92,7 @@
             </ul>
           </div>
           <button class="btn btn-primary mt-3" (click)="completePayment()">Bezahlt</button>
+          <button class="btn btn-danger mt-3" (click)="closeDialogs()">Abbruch</button>
         </div>
       </div>
     </ng-template>

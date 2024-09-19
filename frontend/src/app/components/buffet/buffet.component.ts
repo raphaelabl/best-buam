@@ -12,6 +12,8 @@ import { BuffetOrderDTO } from 'src/app/models/dto/buffet-order-dto';
 })
 export class BuffetComponent implements OnInit{
 
+  buffetName: string = "Kueche";
+
   orders: BuffetOrderDTO[] = [];
 
   orderSubscription!: Subscription;
@@ -20,18 +22,20 @@ export class BuffetComponent implements OnInit{
   }
 
   ngOnInit(): void {
+
+  }
+
+  buffetNameInputed(){
     this.loadData();
   }
 
   loadData() {
-    this.webSocketService.connect("Schanke");
+    this.webSocketService.connect(this.buffetName);
     this.orderSubscription = this.webSocketService.getMessages().subscribe({
       next: data => {
-        
+
         let orderO: BuffetOrderDTO = JSON.parse(data)
 
-        console.log("Test")
-        console.log(orderO)
         orderO.order.preparationStatus = 0
         this.orders.push(orderO);
 
@@ -46,7 +50,8 @@ export class BuffetComponent implements OnInit{
   }
 
   completeOrder(orderId: string) {
-    this.orders.find(order => order.id === orderId)!.order.preparationStatus = 2;
+    this.orders = this.orders.filter(order => order.id !== orderId);
+    this.webSocketService.sendMessage("dispach/"+orderId);
     this.printReceipt(0); // TODO Druck machen
   }
 

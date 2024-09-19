@@ -14,8 +14,10 @@ import java.util.List;
 public class Order extends PanacheEntity {
 
     public int tableNr;
+
     @ManyToOne
     public Waiter waiter;
+
     @OneToMany
     public List<OrderPosition> positions;
 
@@ -23,6 +25,7 @@ public class Order extends PanacheEntity {
 
 
     public Order() {
+
     }
 
     public void updateEntity(Order newEntity) {
