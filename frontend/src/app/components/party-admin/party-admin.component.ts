@@ -4,7 +4,7 @@ import {Party} from "../../models/party";
 import * as moment from 'moment';
 import {Waiter} from "../../models/waiter";
 import {Buffet} from "../../models/buffet";
-import {MatLegacyDialog as MatDialog} from "@angular/material/legacy-dialog";
+import {MatDialog} from "@angular/material/dialog";
 import {BuffetDialogComponent} from "../_dialog/buffet-dialog/buffet-dialog.component";
 
 @Component({

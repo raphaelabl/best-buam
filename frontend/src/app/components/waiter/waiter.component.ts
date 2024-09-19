@@ -1,10 +1,10 @@
 import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {MatLegacyDialog as MatDialog} from "@angular/material/legacy-dialog";
 import {HttpService} from "../../services/http.service";
 import {Party} from "../../models/party";
 import {Buffet} from "../../models/buffet";
 import {OrderPosition} from "../../models/order-position";
 import {Order} from "../../models/order";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-waiter',
