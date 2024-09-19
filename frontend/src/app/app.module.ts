@@ -14,18 +14,28 @@ import {WaiterComponent} from './components/waiter/waiter.component';
 import {BuffetComponent} from './components/buffet/buffet.component';
 import {MatDialogModule} from "@angular/material/dialog";
 
-@NgModule({ declarations: [
-        AppComponent,
-        DashboardComponent,
-        AdminComponent,
-        PartyAdminComponent,
-        BuffetDialogComponent,
-        WaiterComponent,
-        BuffetComponent,
-    ],
-    bootstrap: [AppComponent], imports: [BrowserModule,
-        AppRoutingModule,
-        FormsModule,
-        BrowserAnimationsModule,
-        MatDialogModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
+@NgModule({
+  declarations: [
+      AppComponent,
+      DashboardComponent,
+      AdminComponent,
+      PartyAdminComponent,
+      BuffetDialogComponent,
+      WaiterComponent,
+      BuffetComponent,
+  ],
+  bootstrap: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    BrowserAnimationsModule,
+    MatDialogModule
+  ],
+  providers: [
+    provideHttpClient(withInterceptorsFromDi())
+  ]
+})
 export class AppModule { }
