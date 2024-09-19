@@ -1,9 +1,10 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA} from "@angular/material/legacy-dialog";
+
 import {Buffet} from "../../../models/buffet";
 import {Item} from "../../../models/item";
 import {HttpService} from "../../../services/http.service";
 import {Printer} from "../../../models/printer";
+import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-buffet-dialog',
