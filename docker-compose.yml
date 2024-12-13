@@ -1,20 +1,16 @@
 version: '3.1'
 services:
-frontend:
-    image: test
-    container_name: angular-frontend
-    ports:
-      - "80:80"
-backend:
-    image: test
-    user: root
-    container_name: backend-quarkus
-    env_file:
-      - .env
-    environmetn:
-      test
-    ports:
-      - "8080:8080"
-    networks:
-      - quarkus
+    frontend:
+        image: test
+        container_name: angular-frontend
+        ports:
+          - "80:80"
+    backend:
+       image: test
+       user: root
+       container_name: backend-quarkus
+       environment:
+          test
+      ports:
+          - "8080:8080"
 
