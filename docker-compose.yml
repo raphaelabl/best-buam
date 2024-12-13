@@ -1,18 +1,20 @@
 version: '3.1'
 services:
 frontend:
-    image: #{docker-image}#
+    image: test
     container_name: angular-frontend
     ports:
-      - "80:80"backend:
-    image: #{docker-image}#
+      - "80:80"
+backend:
+    image: test
     user: root
     container_name: backend-quarkus
     env_file:
       - .env
     environmetn:
-      #{e-vars}#
+      test
     ports:
       - "8080:8080"
     networks:
       - quarkus
+
