@@ -1,16 +1,16 @@
 version: '3.1'
 services:
     frontend:
-        image: test
+        image: ${{ env.REGISTRY }}/best-buam-Angular
         container_name: angular-frontend
         ports:
           - "80:80"
     backend:
-       image: test
+       image: best-buam-Quarkus
        user: root
        container_name: backend-quarkus
        environment:
-          test
+          
       ports:
           - "8080:8080"
 
