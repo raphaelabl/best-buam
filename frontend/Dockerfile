@@ -10,8 +10,3 @@ RUN npm run build --prod
 FROM nginx:alpine
 COPY --from=node /app/dist/./frontend//browser /usr/share/nginx/html
 COPY nginx-custom.conf /etc/nginx/conf.d/default.conf
-
-# Install gettext for envsubst (used to replace env vars in runtime)
-RUN apk add --no-cache gettext
-# Copy the env.template.js file to the assets directory
-COPY src/assets/env.template.js /usr/share/nginx/html/assets/env.template.js
