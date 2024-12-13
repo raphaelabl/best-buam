@@ -10,7 +10,7 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
-    build-backend:
+  build-backend:
     name: build-backend-prod
     runs-on: ubuntu-latest
     steps:
@@ -53,7 +53,7 @@ jobs:
           cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_REPOSITORY }}-api:latest
           cache-to: type=inline
           
-    build-frontend:
+  build-frontend:
     name: build-frontend-prod
     runs-on: ubuntu-latest
     steps:
