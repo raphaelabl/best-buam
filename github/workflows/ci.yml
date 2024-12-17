@@ -11,10 +11,10 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
-    build-frontend:
-    name: build-frontend-prod
-    runs-on: ubuntu-latest
-    steps:
+       build-frontend:
+     name: build-frontend-prod
+     runs-on: ubuntu-latest
+     steps:
       - uses: actions/checkout@v3
 
       - name: Log in to the Container registry
@@ -33,22 +33,22 @@ jobs:
           context: ./frontend/
           file: ./frontend/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/best-buam-Angular:latest
+          tags: ${{ env.REGISTRY }}/raphaelabl/best-buam-angular:latest
           build-args: |
             configuration=production
-          cache-from: type=registry,ref=${{ env.REGISTRY }}/best-buam-Angular:buildcache
-          cache-to: type=registry,ref=${{ env.REGISTRY }}/best-buam-Angular:buildcache,mode=max
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/raphaelabl/best-buam-angular:buildcache
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/raphaelabl/best-buam-angular:buildcache,mode=max
 
-  build-backend:
-    name: build-backend-prod
-    runs-on: ubuntu-latest
-    steps:
+    build-backend:
+     name: build-backend-prod
+     runs-on: ubuntu-latest
+     steps:
       - uses: actions/checkout@v3
 
       - name: Set up JDK 
         uses: actions/setup-java@v3
         with:
-          java-version: ''
+          java-version: '21'
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven
@@ -75,8 +75,8 @@ jobs:
           context: ./backend/
           file: ./backend/src/main/docker/Dockerfile.jvm
           push: true
-          tags: ${{ env.REGISTRY }}/best-buam-Quarkus:latest
-          cache-from: type=registry,ref=${{ env.REGISTRY }}/best-buam-Quarkus:latest
+          tags: ${{ env.REGISTRY }}/raphaelabl/best-buam-quarkus:latest
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/raphaelabl/best-buam-quarkus:latest
           cache-to: type=inline
 
 

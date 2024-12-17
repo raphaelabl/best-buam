@@ -1,12 +1,12 @@
 version: '3.1'
 services:
     frontend:
-        image: ${{ env.REGISTRY }}/best-buam-Angular
+        image: ${{ env.REGISTRY }}/raphaelabl/best-buam-angular
         container_name: angular-frontend
         ports:
           - "80:80"
     backend:
-       image: best-buam-Quarkus
+       image: raphaelabl/best-buam-quarkus
        user: root
        container_name: backend-quarkus
        environment:
