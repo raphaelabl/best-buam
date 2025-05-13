@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
-  API_URL: "https://order.ffbruckmuehl.at/auth/",
-  WS_URL: "ws://localhost:8080/",
+  API_URL: "https://order.ffbruckmuehl.at/api/",
+  WS_URL: "ws://order.ffbruckmuehl.at/api/",
   keycloak: {
     issuer: 'https://order.ffbruckmuehl.at/auth/',
     realm: 'bestbuam',
