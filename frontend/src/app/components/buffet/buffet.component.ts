@@ -2,6 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {Order} from "../../models/order";
 import {WebSocketService} from "../../services/web-socket.service";
 import {Subscription} from "rxjs";
+import { log } from 'console';
+import { BuffetOrderDTO } from 'src/app/models/dto/buffet-order-dto';
+import {RoleService} from "../../services/role.service";
 
 @Component({
   selector: 'app-buffet',
@@ -10,11 +13,13 @@ import {Subscription} from "rxjs";
 })
 export class BuffetComponent implements OnInit{
 
-  orders: Order[] = [];
+  buffetName: string = "";
+
+  orders: BuffetOrderDTO[] = [];
 
   orderSubscription!: Subscription;
 
-  constructor(private webSocketService: WebSocketService) {
+  constructor(private webSocketService: WebSocketService, public roleService: RoleService) {
   }
 
   ngOnInit(): void {
@@ -22,22 +27,32 @@ export class BuffetComponent implements OnInit{
   }
 
   loadData() {
-    this.webSocketService.connect();
+    this.buffetName = this.roleService.getUserName()!;
+
+    console.log(this.roleService.getUserName())
+
+    this.webSocketService.connect(this.buffetName);
     this.orderSubscription = this.webSocketService.getMessages().subscribe({
       next: data => {
-        this.orders.push(JSON.parse(data))
+
+        let orderO: BuffetOrderDTO = JSON.parse(data)
+
+        orderO.order.preparationStatus = 0
+        this.orders.push(orderO);
+
       },
       error: err => console.log(err)
     })
   }
 
 
-  setInProgress(orderId: number) {
-    this.orders.find(order => order.id === orderId)!.preparationStatus = 1;
+  setInProgress(orderId: string) {
+    this.orders.find(order => order.id === orderId)!.order.preparationStatus = 1;
   }
 
-  completeOrder(orderId: number) {
-    this.orders.find(order => order.id === orderId)!.preparationStatus = 2;
+  completeOrder(orderId: string) {
+    this.orders = this.orders.filter(order => order.id !== orderId);
+    this.webSocketService.sendMessage("dispach/"+orderId);
     this.printReceipt(0); // TODO Druck machen
   }
 

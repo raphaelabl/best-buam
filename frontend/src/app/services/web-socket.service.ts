@@ -12,8 +12,8 @@ export class WebSocketService {
 
   constructor() {}
 
-  connect(): void {
-    this.socket = new WebSocket(environment.WS_URL + "/order");
+  connect(name: string): void {
+    this.socket = new WebSocket(environment.WS_URL + "order/"+name);
 
     this.socket.onmessage = (event) => {
       this.messages.next(event.data);

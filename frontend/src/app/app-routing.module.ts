@@ -5,14 +5,16 @@ import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {PartyAdminComponent} from "./components/party-admin/party-admin.component";
 import {WaiterComponent} from "./components/waiter/waiter.component";
 import {BuffetComponent} from "./components/buffet/buffet.component";
+import {authGuard} from "./services/auth.service";
 
 export const routes: Routes = [
-  { path: 'admin', component: AdminComponent},
-  { path: 'home', component: DashboardComponent},
-  { path: 'waiter', component: WaiterComponent},
-  { path: 'fest-admin', component: PartyAdminComponent},
-  { path: 'buffet', component: BuffetComponent},
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: 'admin', component: AdminComponent, canActivate: [authGuard], data: { requiredRoles: [1,3] }},
+  { path: 'home', component: DashboardComponent,canActivate: [authGuard], data: { requiredRoles: [1, 2, 3] }},
+  { path: 'waiter', component: WaiterComponent,canActivate: [authGuard], data: { requiredRoles: [1, 2, 3] }},
+  { path: 'fest-admin', component: PartyAdminComponent,canActivate: [authGuard], data: { requiredRoles: [1, 2] }},
+  { path: 'buffet', component: BuffetComponent,canActivate: [authGuard], data: { requiredRoles: [1, 4] }},
+  { path: '', redirectTo: '/home', pathMatch: 'full'},
+  { path: '**', redirectTo: '/home'},
 ];
 
 @NgModule({

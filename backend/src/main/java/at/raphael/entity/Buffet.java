@@ -3,6 +3,7 @@ package at.raphael.entity;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,10 @@ import java.util.List;
 public class Buffet extends PanacheEntity {
 
     public String name;
+
+    public String login;
+    @Transient
+    public String password;
 
     @OneToMany
     public List<Item> items;

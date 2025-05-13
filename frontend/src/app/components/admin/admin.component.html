@@ -28,6 +28,8 @@
 
   <!-- Neues Fest anlegen -->
   <div class="card mt-5">
+
+
     <form (ngSubmit)="createParty()" (reset)="resetParty()">
       <div class="card-header">
         <h3>{{newParty.id === null || newParty.id === undefined || newParty.id === 0? "Neues Fest anlegen":"Fest Bearbeiten: " + newParty.id}}</h3>
@@ -71,24 +73,31 @@
       <div class="card-body">
         <h3>Fest-Admin</h3>
         <hr>
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <label for="firstName" class="form-label">Vorname</label>
-              <input type="text" id="firstName" class="form-control" [(ngModel)]="newParty.partyAdmin!.firstName" name="firstname" required>
-            </div>
-            <div class="col-md-6">
-              <label for="lastName" class="form-label">Nachname</label>
-              <input type="text" id="lastName" class="form-control" [(ngModel)]="newParty.partyAdmin!.lastName" name="lastname" required>
-            </div>
-            <div class="col-md-5">
-              <label for="email" class="form-label">Email</label>
-              <input type="email" id="email" class="form-control" [(ngModel)]="newParty.partyAdmin!.email" name="email" required>
-            </div>
-            <div class="col-md-4">
-              <label for="phone" class="form-label">Telefonnummer</label>
-              <input type="text" id="phone" class="form-control" [(ngModel)]="newParty.partyAdmin!.phone" name="phone" required>
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <label for="waiterFirstName" class="form-label">Vorname</label>
+            <input type="text" id="waiterFirstName" class="form-control" [(ngModel)]="newParty.partyAdmin!.firstName" name="waiterFirstName" required>
+          </div>
+          <div class="col-md-4">
+            <label for="waiterLasttName" class="form-label">Nachname</label>
+            <input type="text" id="waiterLasttName" class="form-control" [(ngModel)]="newParty.partyAdmin!.lastName" name="waiterLasttName" required>
+          </div>
+          <div class="col-md-4">
+            <label for="waiterLoginEmail" class="form-label">Email</label>
+            <input type="text" id="waiterLoginEmail" class="form-control" [(ngModel)]="newParty.partyAdmin!.email" name="waiterLoginEmail" required>
+          </div>
+          <div class="col-md-4">
+            <label for="waiterUsername" class="form-label">Username für Login</label>
+            <input type="text" id="waiterUsername" class="form-control" [(ngModel)]="newParty.partyAdmin!.username" name="waiterUsername" required>
+          </div>
+          <div class="col-md-4">
+            <label for="waiterPassword" class="form-label">Passwort für Login</label>
+            <div class="d-flex">
+              <input [type]="(!showUserPw)?'password':'text'" id="waiterPassword" class="form-control" [(ngModel)]="newParty.partyAdmin!.password" name="waiterPassword" required>
+              <button type="button" class="btn" (click)="showUserPw = !showUserPw"><i class="fa fa-eye" *ngIf="!showUserPw"></i><i class="fa fa-eye-slash" *ngIf="showUserPw"></i></button>
             </div>
           </div>
+        </div>
 
           <hr style="margin-top: 2rem">
           <div style="display: flex; justify-content: space-around;" >

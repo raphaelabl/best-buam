@@ -3,5 +3,6 @@ export interface Printer {
 
   name?: string;
   ipAddress?: string;
+  port?: String;
 
 }

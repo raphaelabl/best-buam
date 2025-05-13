@@ -1,7 +1,6 @@
 <h1 mat-dialog-title>Ausgabe-Position bearbeiten</h1>
 
-
-<div class="card mt-5">
+<div class="card">
   <div class="card-header">
     <h3>Ausgaben verwalten</h3>
   </div>
@@ -54,13 +53,17 @@
     <hr>
     <form (ngSubmit)="managePrinter()">
       <div class="row mb-3">
-        <div class="col-md-6">
+        <div class="col-md-4">
           <label for="printerName" class="form-label">Name des Druckers</label>
           <input type="text" id="printerName" class="form-control" [(ngModel)]="newPrinter!.name" name="name" required>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
           <label for="printerIpAdresse" class="form-label">Ip-Addresse des Druckers</label>
           <input type="text" id="printerIpAdresse" class="form-control" [(ngModel)]="newPrinter!.ipAddress" name="printerIpAdresse" required>
+        </div>
+        <div class="col-md-4">
+          <label for="printerIpAdresse" class="form-label">Port des Druckers</label>
+          <input type="text" id="port" class="form-control" [(ngModel)]="newPrinter!.port" name="port" required>
         </div>
       </div>
       <button type="submit" class="btn btn-primary">Drucker hinzufügen</button>

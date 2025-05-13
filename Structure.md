@@ -1,7 +1,31 @@
 ## Bestö Buam
 
+### LIVE TODO
+-------------
+ - TODO
+    -----
+ - Checks keine Umlaute! 
+ - Kellner Login richtiges fest zuteilen
+ - Username ist vor - nachname ersten stellen + feuerwehr id
+ - Nach fest + zeit alle benutzer löschen
+ - Datenbank muss noch persistierung ordentlich gemacht werden
 
-### Admin Page:
+ - DONE
+    ----- 
+- Auto Username erstellung
+- usernamen bei bearbeitung disabled machen
+- Keycloak Benutzer aktuallisieren + mit hinzufügen und wieder entfernen
+- Prüfen ob Keycloak Benutzer schon vorhanden ist
+- Keycloak Benutzer über Quarkus Anlegen
+- Anzahl in Bestellübersicht anzeigen
+- Popup nach bezahlen schließen wenn erfolgreich
+- Buffet Ordentlich machen und Praktischer
+- Buffet wenn schließen oder neuladen vom fenster bestellungen behalten und wieder neu anzeigen
+
+
+### STRUKTUR
+------------
+#### Admin Page:
 - Liste aller aktuellen Feste
     - Bearbeitungs Button für Einstellungen !
 - Neues Fest anlegen
@@ -20,7 +44,7 @@
 - ...
 - Backdoor is eh kloor :-D
 
-### Fest Admin:
+#### Fest Admin:
 - Dashboard
     - Nützliche übersichten 
     - ...
@@ -46,7 +70,7 @@
 
 - Gimick steuerung
 
-### Kellner:
+#### Kellner:
 - Aufnahme Bestellungen
     - Klick auf Artikeln für hinzufügen weiterm Artikels
         - Bearbeiten für spezielle Artikel
@@ -59,7 +83,7 @@
         - Rückgeld ausrechnen
             - In scheinen und Müntzenv
 
-### Ausgabe Positionen (zB Ausschank ...)
+#### Ausgabe Positionen (zB Ausschank ...)
 - Anzeige Bestellte Artikel
     - Id-Anzeige zu übersichtbarkeit
     - Was wie oft + Zusatz
@@ -69,6 +93,6 @@
         - Rechnungsdruck
 
 
-### !!! Gimicks !!!
+#### !!! Gimicks !!!
 - Wird nu überlegt
 - Popups bei bestimmten bestellungen

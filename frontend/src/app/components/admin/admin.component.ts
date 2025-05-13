@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Party} from "../../models/party";
 import {HttpService} from "../../services/http.service";
+import {error} from "@angular/compiler-cli/src/transformers/util";
 
 @Component({
   selector: 'app-admin',
@@ -12,6 +13,7 @@ export class AdminComponent implements OnInit{
   constructor(public http: HttpService) {}
 
   partyList: Party[] = [];
+  showUserPw: boolean = false;
 
   newParty: Party = {
     partyAdmin: {},
@@ -37,7 +39,14 @@ export class AdminComponent implements OnInit{
 
   // Posting a new Party
   createParty() {
-
+    this.http.postKeycloakPartyAdmin(this.newParty.partyAdmin!).subscribe({
+      next: data => {
+        console.log(data)
+      },
+      error: err => {
+        console.log(err)
+      }
+    })
     this.http.postParty(this.newParty).subscribe({
       next: data => {
 

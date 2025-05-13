@@ -16,6 +16,9 @@ public class OrderPosition extends PanacheEntity {
     public String spezialText;
     public boolean isSpezial;
 
+    public boolean dispached;
+
+
     public OrderPosition() {
     }
 

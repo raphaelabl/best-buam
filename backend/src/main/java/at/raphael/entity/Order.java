@@ -21,13 +21,17 @@ public class Order extends PanacheEntity {
     @OneToMany
     public List<OrderPosition> positions;
 
+    public boolean status;
+
+
     public Order() {
+
     }
 
     public void updateEntity(Order newEntity) {
         this.tableNr = newEntity.tableNr;
-
         this.waiter = newEntity.waiter.persistOrUpdate();
+        this.status = newEntity.status;
 
         this.positions = new ArrayList<>();
         for(OrderPosition pos : newEntity.positions) {

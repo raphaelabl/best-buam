@@ -35,10 +35,10 @@
       <div class="card-header">
         <h3>Aktuelle Bestellung</h3>
       </div>
-      <div class="card-body">
+      <div class="card-body" style=" max-height: 300px; overflow-y: auto;">
         <ul class="list-group" >
           <li class="list-group-item" *ngFor="let order of newOrder!.positions" style="display: inline-flex; flex-direction: row; align-items: center; justify-content: space-between">
-            {{ order.item!.name }} - {{ (order.item!.price! * order.amount!) | currency:'EUR' }}
+            {{order.amount}} x {{ order.item!.name }} - {{ (order.item!.price! * order.amount!) | currency:'EUR' }}
             {{order.spezialText?.substring(0,10)}}
             <div style="display: flex; justify-content: space-between;">
               <button class="btn btn-sm btn-success" style="margin-top:0 !important; margin-left: 0.5rem;" (click)="addToOrder(order)"><i class="fa fa-add"></i></button>
@@ -69,30 +69,88 @@
     </ng-template>
 
     <Button class="btn btn-primary" (click)="openDialog()">Bezahlen</Button>
-    <!-- Bezahlung -->
+    <!-- Bezahlung Gesammt-->
     <ng-template #payPopUp style="background: transparent!important;">
-      <div class="card mt-4">
+      <div class="dialog" *ngIf="payTogether">
         <div class="card-header">
-          <h3>Bezahlung</h3>
+          <h3>Gesammt Bezahlen</h3>
         </div>
         <div class="card-body">
-          <h4>Gesamtsumme: {{ getTotal() | currency:'EUR' }}</h4>
+          <h4>Gesamtsumme: {{ getTotal(newOrder.positions) | currency:'EUR' }}</h4>
           <div class="form-group mt-3">
             <label for="paidAmount">Erhaltenes Geld</label>
             <input type="number" id="paidAmount" class="form-control" [(ngModel)]="paidAmount">
           </div>
           <div class="change-system">
-            <h3>Zurück: {{(paidAmount - getTotal() > 0)?paidAmount - getTotal():0}}€</h3>
+            <h3>Zurück: {{(paidAmount - getTotal(newOrder.positions) > 0)?(paidAmount - getTotal(newOrder.positions)).toFixed(2):0}}€</h3>
             <ul>
               <li *ngFor="let option of changeSteps; let i = index">
-                <span *ngIf="getChangeArray()[i] > 0">
-                  {{ getChangeArray()[i]! }} x <img style="height: 1rem" [src]="'assets/'+option.toString().replace('.', '_')+'.png'">
+                <span *ngIf="getChangeArray(newOrder.positions)[i] > 0">
+                  {{ getChangeArray(newOrder.positions)[i]! }} x <img style="height: 1rem" [src]="'assets/'+option.toString().replace('.', '_')+'.png'">
                 </span>
               </li>
             </ul>
           </div>
           <button class="btn btn-primary mt-3" (click)="completePayment()">Bezahlt</button>
+          <button class="btn btn-danger mt-3" (click)="closeDialogs()">Abbruch</button>
         </div>
+      </div>
+      <!--Bezahlung getrännts-->
+      <div class="dialog" *ngIf="!payTogether">
+        <div class="card-header">
+          <h3>Getrennt Bezahlen</h3>
+        </div>
+        <div class="card-body">
+          <ng-container *ngIf="!selectedSeparateBill">
+            <h3>Bestellungen: </h3>
+            <div class="card-body" style=" max-height: 300px; overflow-y: auto;">
+              <ul class="list-group" >
+                <li class="list-group-item" *ngFor="let order of cloneArticles" style="display: inline-flex; flex-direction: row; align-items: center; justify-content: space-between">
+                  {{order.amount}} x {{ order.item!.name }} - {{ (order.item!.price! * order.amount!) | currency:'EUR' }}
+                  {{order.spezialText?.substring(0,10)}}
+                  <div style="display: flex; justify-content: space-between;">
+                    <button class="btn btn-sm btn-success" style="margin-top:0 !important; margin-left: 0.5rem;" (click)="addToBill(order)"><i class="fa fa-add"></i></button>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <h1>Artikel zu Zahlen</h1>
+            <div class="card-body" style=" max-height: 300px; overflow-y: auto;">
+              <ul class="list-group" >
+                <li class="list-group-item" *ngFor="let order of separateBill" style="display: inline-flex; flex-direction: row; align-items: center; justify-content: space-between">
+                  {{order.amount}} x {{ order.item!.name }} - {{ (order.item!.price! * order.amount!) | currency:'EUR' }}
+                  {{order.spezialText?.substring(0,10)}}
+                  <div style="display: flex; justify-content: space-between;">
+                    <button class="btn btn-sm btn-warning" style="margin-top:0 !important; margin-left: 0.5rem;" (click)="removeFromBill(order)"><i class="fa fa-minus"></i></button>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="selectedSeparateBill">
+            <h4>Gesamtsumme: {{ getTotal(separateBill) | currency:'EUR' }}</h4>
+            <div class="form-group mt-3">
+              <label for="paidAmount">Erhaltenes Geld</label>
+              <input type="number"  class="form-control" [(ngModel)]="paidAmount">
+            </div>
+            <div class="change-system">
+              <h3>Zurück: {{(paidAmount - getTotal(separateBill) > 0)?(paidAmount - getTotal(separateBill)).toFixed(2):0}}€</h3>
+              <ul>
+                <li *ngFor="let option of changeSteps; let i = index">
+                  <span *ngIf="getChangeArray(separateBill)[i] > 0">
+                    {{ getChangeArray(separateBill)[i]! }} x <img style="height: 1rem" [src]="'assets/'+option.toString().replace('.', '_')+'.png'">
+                  </span>
+                </li>
+              </ul>
+            </div>
+            <button class="btn btn-primary mt-3" (click)="nextSeparate()">Bezahlt</button>
+          </ng-container>
+          <button class="btn btn-primary mt-3" (click)="selectedSeparateBill = true">Weiter</button>
+          <button class="btn btn-danger mt-3" *ngIf="selectedSeparateBill" (click)="selectedSeparateBill = false">Zurück</button>
+        </div>
+      </div>
+      <div>
+        <Button (click)="switchPaymentOption()">{{payTogether?'Getrennt Bezahlen':'Zusammen'}}</Button>
       </div>
     </ng-template>
   </div>

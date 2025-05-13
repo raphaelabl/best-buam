@@ -30,11 +30,11 @@
         <div class="row mb-3">
           <div class="col-md-4">
             <label for="waiterFirstName" class="form-label">Vorname</label>
-            <input type="text" id="waiterFirstName" class="form-control" [(ngModel)]="newWaiter.firstName" name="waiterFirstName" required>
+            <input type="text" id="waiterFirstName" class="form-control" [(ngModel)]="newWaiter.firstName" (ngModelChange)="getTmpUsernameForWaiter()" name="waiterFirstName" required>
           </div>
           <div class="col-md-4">
             <label for="waiterLasttName" class="form-label">Nachname</label>
-            <input type="text" id="waiterLasttName" class="form-control" [(ngModel)]="newWaiter.lastName" name="waiterLasttName" required>
+            <input type="text" id="waiterLasttName" class="form-control" [(ngModel)]="newWaiter.lastName" (ngModelChange)="getTmpUsernameForWaiter()" name="waiterLasttName" required>
           </div>
           <div class="col-md-4">
             <label for="waiterLoginEmail" class="form-label">Email</label>
@@ -42,21 +42,22 @@
           </div>
           <div class="col-md-4">
             <label for="waiterUsername" class="form-label">Username für Login</label>
-            <input type="text" id="waiterUsername" class="form-control" [(ngModel)]="newWaiter.username" name="waiterUsername" required>
+            <input
+              [(ngModel)]="newWaiter.username"
+              [disabled]="this.newWaiter.id !== null && this.newWaiter.id !== undefined && this.newWaiter.id !== 0"
+              type="text" id="waiterUsername" class="form-control"  name="waiterUsername" required>
           </div>
           <div class="col-md-4">
             <label for="waiterPassword" class="form-label">Passwort für Login</label>
             <div class="d-flex">
-              <input [type]="(!showUserPw)?'password':'text'" id="waiterPassword" class="form-control" [(ngModel)]="newWaiter.password" name="waiterPassword" required>
+
+              <input
+                [disabled]="this.newWaiter.id !== null && this.newWaiter.id !== undefined && this.newWaiter.id !== 0"
+                [type]="(!showUserPw)?'password':'text'" id="waiterPassword" class="form-control" [(ngModel)]="newWaiter.password"
+                name="waiterPassword" required>
+
               <button type="button" class="btn" (click)="showUserPw = !showUserPw"><i class="fa fa-eye" *ngIf="!showUserPw"></i><i class="fa fa-eye-slash" *ngIf="showUserPw"></i></button>
             </div>
-          </div>
-          <div class="col-md-4">
-            <label for="role" class="form-label">Rolle</label>
-            <select id="role" class="form-select" [(ngModel)]="newWaiter.role" name="role" required>
-              <option value="Bestellung">Bestellung</option>
-              <option value="Bringer">Bringer</option>
-            </select>
           </div>
         </div>
         <div class="d-flex justify-content-around">
@@ -71,7 +72,7 @@
         <ul class="list-group">
           <li class="list-group-item" *ngFor="let waiter of selectedParty.waiters" (click)="editWaiter(waiter.id!)">
             <strong>{{ waiter.firstName + " " + waiter.lastName + ": " + waiter.username}}</strong> - {{ waiter.role }}
-            <button class="btn btn-danger btn-sm float-end" (click)="removeWaiter(waiter.id!)">Entfernen</button>
+            <button class="btn btn-danger btn-sm float-end" (click)="removeWaiter(waiter.id!, waiter.username!)">Entfernen</button>
           </li>
         </ul>
       </div>
@@ -86,9 +87,22 @@
     <div class="card-body">
       <form (ngSubmit)="manageBuffet()" (reset)="newBuffet = { items: [], printers: []}">
         <div class="row mb-3">
-          <div class="col-md-12">
+          <div class="col-md-4">
             <label for="itemName" class="form-label">Name der Ausgabe</label>
-            <input type="text" id="itemName" class="form-control" [(ngModel)]="newBuffet.name" name="name" required>
+            <input type="text" id="itemName" class="form-control" [(ngModel)]="newBuffet.name" (ngModelChange)="getTmpUsernameForBuffet()" name="name" required>
+          </div>
+          <div class="col-md-4">
+            <label for="buffetLogin" class="form-label">Ausgabe Login</label>
+            <input
+              [disabled]="this.newBuffet.id !== null && this.newBuffet.id !== undefined && this.newBuffet.id !== 0"
+              type="text" id="buffetLogin" class="form-control" [(ngModel)]="newBuffet.login" name="buffetLogin" required>
+          </div>
+          <div class="col-md-4">
+            <label for="buffetPassword" class="form-label">Password</label>
+            <input
+              [disabled]="this.newBuffet.id !== null && this.newBuffet.id !== undefined && this.newBuffet.id !== 0"
+              type="text" [type]="(!showUserPw)?'password':'text'" id="buffetPassword" class="form-control" [(ngModel)]="newBuffet.password" name="buffetPassword" required>
+            <button type="button" class="btn" (click)="showUserPw = !showUserPw"><i class="fa fa-eye" *ngIf="!showUserPw"></i><i class="fa fa-eye-slash" *ngIf="showUserPw"></i></button>
           </div>
         </div>
         <div class="d-flex justify-content-around">
@@ -101,9 +115,9 @@
       <div class="mt-4">
         <h4>Ausgaben</h4>
         <ul class="list-group">
-          <li class="list-group-item" *ngFor="let buffet of selectedParty.buffets" (click)="editBuffetInDialog(buffet.id!)">
+          <li class="list-group-item" *ngFor="let buffet of selectedParty.buffets" (click)="editBuffet(buffet.id!)"(dblclick)="editBuffetInDialog(buffet.id!)">
             <strong>{{ buffet.name }}</strong>
-            <button class="btn btn-danger btn-sm float-end" (click)="removeBuffet(buffet.id!)">Entfernen</button>
+            <button class="btn btn-danger btn-sm float-end" (click)="removeBuffet(buffet.id!, buffet.login!)">Entfernen</button>
           </li>
         </ul>
       </div>

@@ -1,16 +1,29 @@
-version: '3.1'
-services:
-    frontend:
-        image: ${{ env.REGISTRY }}/raphaelabl/best-buam-angular
-        container_name: angular-frontend
-        ports:
-          - "80:80"
-    backend:
-       image: raphaelabl/best-buam-quarkus
-       user: root
-       container_name: backend-quarkus
-       environment:
-          
-      ports:
-          - "8080:8080"
+version: '3.8'
 
+services:
+  keycloak:
+    image: keycloak/keycloak:24.0.1
+    platform: linux/arm64
+    container_name: keycloak
+    command: start-dev
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HTTP_RELATIVE_PATH: /auth
+      KC_HOSTNAME_STRICT: "false"
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./keycloak_data:/opt/keycloak/data
+
+  postgres:
+    image: postgres
+    container_name: postgres
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
