@@ -1,7 +1,5 @@
-<input type="text" [(ngModel)]="buffetName">
-<button (click)="buffetNameInputed()">clis</button>
 <div class="container mt-3" *ngIf="buffetName !== ''">
-  <h2 class="text-center">Ausschank - Aktuelle Bestellungen</h2>
+  <h2 class="text-center">{{roleService.getFirstName()}} - Aktuelle Bestellungen</h2>
 
   <!-- Bestellungen als Cards anzeigen -->
   <div class="row">

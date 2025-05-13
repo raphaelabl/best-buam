@@ -14,18 +14,15 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
+        <ng-container *ngFor="let navLink of navLinks">
+          <li class="nav-item"  *ngIf="roleService.checkPermission(navLink.roles)">
+            <a class="nav-link text-dark" [href]="navLink.route" routerLinkActive="active">{{navLink.name}}</a>
+          </li>
+        </ng-container>
         <li class="nav-item">
-          <a class="nav-link text-dark" href="/admin" routerLinkActive="active">Admin-Page</a>
+          <a class="nav-link text-dark" routerLinkActive="active" (click)="logout()">Logout</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link text-dark" href="/create-product" routerLinkActive="active">Produkt erstellen</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-dark" href="/orders" routerLinkActive="active">Bestellungen</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-dark" href="/products" routerLinkActive="active">Produkte</a>
-        </li>
+
       </ul>
     </div>
   </div>

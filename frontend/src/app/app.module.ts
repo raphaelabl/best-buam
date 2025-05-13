@@ -15,6 +15,7 @@ import {WaiterComponent} from './components/waiter/waiter.component';
 import {BuffetComponent} from './components/buffet/buffet.component';
 import {MatDialogModule} from "@angular/material/dialog";
 import {KeycloakAngularModule, KeycloakService} from "keycloak-angular";
+import {MatCard, MatCardContent} from "@angular/material/card";
 
 @NgModule({
   declarations: [
@@ -35,7 +36,9 @@ import {KeycloakAngularModule, KeycloakService} from "keycloak-angular";
     FormsModule,
     BrowserAnimationsModule,
     MatDialogModule,
-    KeycloakAngularModule
+    KeycloakAngularModule,
+    MatCardContent,
+    MatCard
   ],
   providers: [
     provideHttpClient(withInterceptorsFromDi()),

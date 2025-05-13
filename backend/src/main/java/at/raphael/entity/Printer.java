@@ -8,12 +8,14 @@ public class Printer extends PanacheEntity {
 
     public String name;
     public String ipAddress;
+    public String port;
 
     public Printer() {
     }
 
     public void updateEntity(Printer newEntity) {
         this.name = newEntity.name;
+        this.port = newEntity.port;
         this.ipAddress = newEntity.ipAddress;
     }
 

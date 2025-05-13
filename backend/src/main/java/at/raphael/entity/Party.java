@@ -1,6 +1,8 @@
 package at.raphael.entity;
 
+import at.raphael.control.KeycloakService;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import jakarta.inject.Inject;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -12,6 +14,7 @@ import java.util.List;
 
 @Entity
 public class Party extends PanacheEntity {
+
 
     // Generally Event information
     public String name;

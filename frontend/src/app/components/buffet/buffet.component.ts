@@ -4,6 +4,7 @@ import {WebSocketService} from "../../services/web-socket.service";
 import {Subscription} from "rxjs";
 import { log } from 'console';
 import { BuffetOrderDTO } from 'src/app/models/dto/buffet-order-dto';
+import {RoleService} from "../../services/role.service";
 
 @Component({
   selector: 'app-buffet',
@@ -12,24 +13,24 @@ import { BuffetOrderDTO } from 'src/app/models/dto/buffet-order-dto';
 })
 export class BuffetComponent implements OnInit{
 
-  buffetName: string = "Kueche";
+  buffetName: string = "";
 
   orders: BuffetOrderDTO[] = [];
 
   orderSubscription!: Subscription;
 
-  constructor(private webSocketService: WebSocketService) {
+  constructor(private webSocketService: WebSocketService, public roleService: RoleService) {
   }
 
   ngOnInit(): void {
-
-  }
-
-  buffetNameInputed(){
     this.loadData();
   }
 
   loadData() {
+    this.buffetName = this.roleService.getUserName()!;
+
+    console.log(this.roleService.getUserName())
+
     this.webSocketService.connect(this.buffetName);
     this.orderSubscription = this.webSocketService.getMessages().subscribe({
       next: data => {

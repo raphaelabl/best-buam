@@ -3,12 +3,20 @@
 ### LIVE TODO
 -------------
  - TODO
-    ----- 
-
-- Keycloak Benutzer über Quarkus Anlegen
+    -----
+ - Checks keine Umlaute! 
+ - Kellner Login richtiges fest zuteilen
+ - Username ist vor - nachname ersten stellen + feuerwehr id
+ - Nach fest + zeit alle benutzer löschen
+ - Datenbank muss noch persistierung ordentlich gemacht werden
 
  - DONE
     ----- 
+- Auto Username erstellung
+- usernamen bei bearbeitung disabled machen
+- Keycloak Benutzer aktuallisieren + mit hinzufügen und wieder entfernen
+- Prüfen ob Keycloak Benutzer schon vorhanden ist
+- Keycloak Benutzer über Quarkus Anlegen
 - Anzahl in Bestellübersicht anzeigen
 - Popup nach bezahlen schließen wenn erfolgreich
 - Buffet Ordentlich machen und Praktischer

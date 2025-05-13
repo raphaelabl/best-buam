@@ -1,6 +1,7 @@
 package at.raphael.boundary;
 
 import at.raphael.boundary.websockets.OrderWebsockets;
+import at.raphael.control.OrderService;
 import at.raphael.entity.Order;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -12,20 +13,22 @@ import java.util.List;
 
 @Path("order")
 public class OrderResource {
+    // Old for the monitors
+    // @Inject
+    // OrderWebsockets orderWebsockets;
 
     @Inject
-    OrderWebsockets orderWebsockets;
+    OrderService orderService;
 
     @POST
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response postOrder(Order order) {
-        Order persisted = order.persistOrUpdate();
-
-        orderWebsockets.sendOrderToAllClients(persisted);
-
-        return Response.ok(persisted).build();
+        // With monitors
+        // Order persisted = order.persistOrUpdate();
+        // orderWebsockets.sendOrderToAllClients(persisted);
+        return Response.ok(orderService.processOrder(order)).build();
     }
 
     @GET

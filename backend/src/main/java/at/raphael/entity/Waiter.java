@@ -2,6 +2,7 @@ package at.raphael.entity;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Transient;
 
 @Entity
 public class Waiter extends PanacheEntity {
@@ -12,6 +13,8 @@ public class Waiter extends PanacheEntity {
 
     public String email;
     public String username;
+
+    @Transient
     public String password;
 
     public Waiter() {

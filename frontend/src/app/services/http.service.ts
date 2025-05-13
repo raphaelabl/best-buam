@@ -5,6 +5,8 @@ import {environment} from "../../environments/environment";
 import {Observable} from "rxjs";
 import {Buffet} from "../models/buffet";
 import {Order} from "../models/order";
+import {Waiter} from "../models/waiter";
+import {PartyAdmin} from "../models/party-admin";
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +14,6 @@ import {Order} from "../models/order";
 export class HttpService {
 
   constructor(private http: HttpClient) {
-    console.log(environment.API_URL)
   }
 
   // Party Resources
@@ -26,6 +27,11 @@ export class HttpService {
 
   getPartyById(partyId: number): Observable<Party> {
     return this.http.get<Party>(environment.API_URL + "party/id" , {params: {id: partyId}})
+  }
+
+
+  getPartyByWaiter(userName: string) {
+    return this.http.get<Party>(environment.API_URL + "party/user", {params: {userName: userName}});
   }
 
   getPartyPerAdmin(adminEmail: string): Observable<Party[]>{
@@ -44,6 +50,31 @@ export class HttpService {
 
   getOrders(): Observable<Order[]>{
     return this.http.get<Order[]>(environment.API_URL + "order");
+  }
+
+  // Keycloak
+  postKeycloakPartyAdmin(partyAdmin: PartyAdmin): Observable<string> {
+    return this.http.post<string>(environment.API_URL + "keycloak/party-admin", partyAdmin);
+  }
+
+  postKeycloakWaiter(waiter: Waiter): Observable<string> {
+    return this.http.post<string>(environment.API_URL + "keycloak/waiter", waiter);
+  }
+
+  postKeycloakBuffet(buffet: Buffet): Observable<string> {
+    return this.http.post<string>(environment.API_URL + "keycloak/buffet", buffet);
+  }
+
+  deleteKeycloakPartyAdmin(partyAdminUsername: string): Observable<string> {
+    return this.http.delete<string>(environment.API_URL + "keycloak/party-admin/"+partyAdminUsername);
+  }
+
+  deleteKeycloakWaiter(waiterUsername: string): Observable<string> {
+    return this.http.delete<string>(environment.API_URL + "keycloak/waiter/"+ waiterUsername);
+  }
+
+  deleteKeycloakBuffet(buffetLogin: string): Observable<string> {
+    return this.http.delete<string>(environment.API_URL + "keycloak/buffet"+ buffetLogin);
   }
 
 }
