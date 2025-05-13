@@ -1,29 +1,34 @@
 import {inject, Injectable} from '@angular/core';
 import {CanActivateFn, Router} from "@angular/router";
 import {RoleService} from "./role.service";
+import { log } from 'console';
+import { KeycloakService } from 'keycloak-angular';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private initialized = false;
 
-  constructor(private roleService: RoleService, private router: Router) {
-    this.initialize();
-  }
+  constructor(private roleService: RoleService, private router: Router, private keycloakService: KeycloakService) { }
 
-  private async initialize() {
-    await this.roleService.initialize();
-    this.initialized = true;
-  }
+  canActivate(requiredRoles: number[]): boolean{
 
-  async canActivate(requiredRoles: number[]): Promise<boolean> {
-    if (!this.initialized) {
-      await this.initialize();
+    console.log("Required:",requiredRoles)
+
+    if(this.roleService.checkPermission(requiredRoles)){
+
+      console.log(this.roleService.getPermissions())
+      return true
+    
+    } else {
+      console.log("error")
+      console.log(this.roleService.getPermissions());
+      
+
+      return false;
     }
-
-    return this.roleService.checkPermission(requiredRoles);
   }
+
 }
 
 export const authGuard: CanActivateFn = (route, state) => {

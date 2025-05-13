@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { log } from 'console';
 import {KeycloakService} from "keycloak-angular";
 import {KeycloakProfile} from "keycloak-js";
 
@@ -28,6 +29,7 @@ export class RoleService {
 
   async initialize(): Promise<void> {
     try {
+      console.log("THIS IS INITIALIZED")
       await this.loadUserProfile();
       await this.loadUserRoles();
     } catch (error) {
@@ -38,6 +40,8 @@ export class RoleService {
   private async loadUserProfile(): Promise<void> {
     try {
       this.userProfile = await this.keycloak.loadUserProfile();
+      console.log(this.userProfile)
+
     } catch (error) {
       console.error('Error loading user profile:', error);
     }
@@ -46,6 +50,10 @@ export class RoleService {
   private async loadUserRoles(): Promise<void> {
     try {
       this.roles = await this.keycloak.getUserRoles();
+
+      console.log("MY USER ROLES")
+      console.log(this.roles)
+
     } catch (error) {
       console.error('Error loading user roles:', error);
     }
@@ -53,11 +61,15 @@ export class RoleService {
 
   checkPermission(requiredRoles: number[]) {
 
-    return this.roles
-      .map(role => this.roleMap.get(role))
-      .filter(element => element !== undefined)
-      .some(roleId => requiredRoles.includes(roleId!));
 
+    return true;
+
+  }
+
+  containsRole(requiredRole: number){
+    return this.roles
+    .map(role => this.roleMap.get(role))
+    .includes(requiredRole);
   }
 
   getAllUser(){

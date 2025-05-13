@@ -8,21 +8,25 @@ import {KeycloakService} from "keycloak-angular";
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent{
+export class AppComponent implements OnInit{
   constructor(public roleService: RoleService, private keycloakService: KeycloakService) {
   }
 
   navLinks: NavData[] = [
-    {route: "/admin", name: "Admin-Page", roles: [1]},
-    {route: "/fest-admin", name: "Fest-Admin-Page", roles: [1,2]},
-    {route: "/waiter", name: "Kellner", roles: [1,2,3]},
-    {route: "/buffet", name: "Schanke", roles: [1,4]},
-    {route: "/buffetOverview", name: "Alle Aktuellen Aufträge", roles: [1,2]},
+    {route: "/admin", name: "Admin-Page", roles: 1},
+    {route: "/fest-admin", name: "Fest-Admin-Page", roles: 2},
+    {route: "/waiter", name: "Kellner", roles: 3},
+    {route: "/buffet", name: "Schanke", roles: 4},
+    {route: "/buffetOverview", name: "Alle Aktuellen Aufträge", roles: 2},
   ]
+
+  public async ngOnInit() {
+    this.roleService.initialize()
+  }
 
   logout() {
     this.keycloakService.logout();
   }
 }
 
-interface NavData{route: string, name: string, roles: number[]}
+interface NavData{route: string, name: string, roles: number}
