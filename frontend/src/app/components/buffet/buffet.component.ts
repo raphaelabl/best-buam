@@ -47,17 +47,18 @@ export class BuffetComponent implements OnInit{
 
 
   setInProgress(orderId: string) {
-    this.orders.find(order => order.id === orderId)!.order.preparationStatus = 1;
+
   }
 
   completeOrder(orderId: string) {
-    this.orders = this.orders.filter(order => order.id !== orderId);
-    this.webSocketService.sendMessage("dispach/"+orderId);
-    this.printReceipt(0); // TODO Druck machen
+    var o = this.orders.find(order => order.id === orderId)!.order;
+    if(o.preparationStatus == 0){
+      o.preparationStatus = 1;
+    }else{
+      this.orders = this.orders.filter(order => order.id !== orderId);
+      this.webSocketService.sendMessage("dispach/"+orderId);
+    }
   }
 
-  printReceipt(orderId: number) {
-    // Hier wird die Funktion für den Rechnungsdruck implementiert.
-  }
 
 }

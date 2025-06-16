@@ -1,5 +1,7 @@
 package at.raphael.boundary.websockets;
 
+import at.raphael.control.OrderService;
+import at.raphael.control.PrintService;
 import at.raphael.entity.Buffet;
 import at.raphael.entity.Order;
 import at.raphael.entity.OrderPosition;
@@ -36,31 +38,39 @@ public class OrderWebsockets {
     @Inject
     ObjectMapper objectMapper;
 
+    @Inject
+    OrderService orderService;
+    @Inject
+    PrintService printService;
+
     private Set<OrderSessions> orderSessions = new HashSet<>();
 
     @OnOpen
     public void onOpen(Session session, @PathParam("buffetName") String buffetName){
 
+        executor.execute(() -> connectToWebsocket(session, buffetName));
+
         log.info(orderSessions.size());
+    }
 
-        executor.execute(() -> {
-            OrderSessions orderSession = new OrderSessions();
-            orderSession.session = session;
+    @Transactional
+    void connectToWebsocket(Session session, String buffetName){
+        OrderSessions orderSession = new OrderSessions();
+        orderSession.session = session;
 
-            try {
-                orderSession.buffet = Buffet.find("name", buffetName).firstResult();
-                orderSessions.add(orderSession);
+        try {
+            orderSession.buffet = Buffet.find("login", buffetName).firstResult();
+            orderSessions.add(orderSession);
 
-                List<BuffetOrderDTO> openOrders = this.getOpenOrdersForBuffet(buffetName);
-                for (BuffetOrderDTO openOrder : openOrders) {
-                    sendBuffetOrder(openOrder);
-                }
-
-
-            } catch (Exception e) {
-                log.error("Error retrieving buffet", e);
+            List<BuffetOrderDTO> openOrders = this.getOpenOrdersForBuffet(buffetName);
+            for (BuffetOrderDTO openOrder : openOrders) {
+                sendBuffetOrder(openOrder);
             }
-        });
+
+        } catch (Exception e) {
+            log.error("Error retrieving buffet", e);
+        }
+
     }
 
     @OnMessage
@@ -90,27 +100,30 @@ public class OrderWebsockets {
     public void processOrderInTransaction(Long orderId, String buffetName) {
         Order o = Order.findById(orderId);
 
-        if (o == null) {
+        log.info("BUFFETNAME:" +buffetName);
+        Buffet b = Buffet.find("name", buffetName).firstResult();
+
+        if (o == null || b == null) {
+            log.info("Order: " + o + ", Buffet: " + b);
             return;
         }
 
-        Optional<OrderSessions> os = this.orderSessions
-                .stream()
-                .filter(element -> element.buffet.name.equals(buffetName))
-                .findAny();
+        //orderService.processOrder(o);
 
-        if (os.isPresent()) {
-            BuffetOrderDTO dto = createBuffetOrder(o, os.get().buffet);
 
-            for (OrderPosition orderPosition : dto.order.positions) {
-                orderPosition.dispached = true;
-            }
+        BuffetOrderDTO dto = createBuffetOrder(o, b);
 
+        for (OrderPosition orderPosition : dto.order.positions) {
+            orderPosition.dispached = true;
         }
+
+        printService.createBillAndPrint(o, b);
+
     }
 
+    @Transactional
     public List<BuffetOrderDTO> getOpenOrdersForBuffet(String buffetName) {
-        Buffet buffet = Buffet.find("name", buffetName).firstResult();
+        Buffet buffet = Buffet.find("login", buffetName).firstResult();
         List<BuffetOrderDTO> result = new ArrayList<>();
 
         if (buffet == null) {
@@ -188,6 +201,11 @@ public class OrderWebsockets {
         } catch (JsonProcessingException e) {
             log.error("Error serializing order", e);
         }
+    }
+
+    //check if buffet has active websocket connection
+    public boolean isBuffetActive(Long buffetId){
+        return orderSessions.stream().map(session -> session.buffet.id).anyMatch(buffetId::equals);
     }
 
     @OnClose

@@ -14,8 +14,8 @@ import java.util.List;
 @Path("order")
 public class OrderResource {
     // Old for the monitors
-    // @Inject
-    // OrderWebsockets orderWebsockets;
+    @Inject
+    OrderWebsockets orderWebsockets;
 
     @Inject
     OrderService orderService;
@@ -26,9 +26,13 @@ public class OrderResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response postOrder(Order order) {
         // With monitors
-        // Order persisted = order.persistOrUpdate();
-        // orderWebsockets.sendOrderToAllClients(persisted);
-        return Response.ok(orderService.processOrder(order)).build();
+        Order persisted = order.persistOrUpdate();
+
+        orderWebsockets.sendOrderToAllClients(persisted);
+
+        Order response = orderService.processOrder(order);
+
+        return Response.ok(response).build();
     }
 
     @GET
