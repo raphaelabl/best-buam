@@ -116,6 +116,7 @@ export class WaiterComponent implements OnInit {
   }
 
   closeDialogs() {
+    this.paidAmount = 0;
     this.dialog.closeAll();
   }
 
@@ -159,6 +160,7 @@ export class WaiterComponent implements OnInit {
   }
 
   switchPaymentOption(){
+    this.paidAmount = 0;
     this.payTogether = !this.payTogether;
     if(!this.payTogether){
       this.cloneArticles = structuredClone(this.newOrder.positions)
@@ -221,6 +223,7 @@ export class WaiterComponent implements OnInit {
     }
     this.separateBill = [];
     this.selectedSeparateBill = false;
+    this.paidAmount = 0;
   }
 
 
@@ -241,6 +244,13 @@ export class WaiterComponent implements OnInit {
           console.log(err);
         }
       });
+      this.paidAmount = 0;
+  }
+
+  checkNegative(num: number){
+    if(num < 0){
+      num = 0;
+    }
   }
 
   //endregion

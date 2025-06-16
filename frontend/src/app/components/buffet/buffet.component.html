@@ -4,7 +4,7 @@
   <!-- Bestellungen als Cards anzeigen -->
   <div class="row">
     <div class="col-md-4 mb-3" *ngFor="let order of orders">
-      <div class="card" [ngClass]="{ 'in-progress': order.order.preparationStatus === 1, 'completed': order.order.preparationStatus === 2 }">
+      <div (click)="completeOrder(order.id!)" class="card" [ngClass]="{ 'in-progress': order.order.preparationStatus === 0, 'completed': order.order.preparationStatus === 1 }">
         <div class="card-header">
           <h4>Bestellung Nr.{{ order.id.split("_")[1] }} TischNr. {{order.order.tableNr}}</h4>
         </div>
@@ -16,14 +16,14 @@
             </li>
           </ul>
         </div>
-        <div class="card-footer">
+        <!--<<div class="card-footer">
           <button class="btn btn-warning" *ngIf="order.order.preparationStatus === 0" (click)="setInProgress(order.id!)">
             In Bearbeitung setzen
           </button>
           <button class="btn btn-danger" *ngIf="order.order.preparationStatus === 1" (click)="completeOrder(order.id!)">
             Auftrag beenden & Rechnung drucken
           </button>
-        </div>
+        </div>-->
       </div>
     </div>
   </div>
