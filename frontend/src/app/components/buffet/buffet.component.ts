@@ -5,6 +5,7 @@ import {Subscription} from "rxjs";
 import { log } from 'console';
 import { BuffetOrderDTO } from 'src/app/models/dto/buffet-order-dto';
 import {RoleService} from "../../services/role.service";
+import {HttpService} from "../../services/http.service";
 
 @Component({
   selector: 'app-buffet',
@@ -19,7 +20,7 @@ export class BuffetComponent implements OnInit{
 
   orderSubscription!: Subscription;
 
-  constructor(private webSocketService: WebSocketService, public roleService: RoleService) {
+  constructor(private webSocketService: WebSocketService, public roleService: RoleService, private http: HttpService) {
   }
 
   ngOnInit(): void {
@@ -35,6 +36,7 @@ export class BuffetComponent implements OnInit{
     this.orderSubscription = this.webSocketService.getMessages().subscribe({
       next: data => {
 
+        console.log(data)
         let orderO: BuffetOrderDTO = JSON.parse(data)
 
         orderO.order.preparationStatus = 0
@@ -46,17 +48,19 @@ export class BuffetComponent implements OnInit{
   }
 
 
-  setInProgress(orderId: string) {
-
-  }
-
   completeOrder(orderId: string) {
     var o = this.orders.find(order => order.id === orderId)!.order;
     if(o.preparationStatus == 0){
       o.preparationStatus = 1;
     }else{
-      this.orders = this.orders.filter(order => order.id !== orderId);
-      this.webSocketService.sendMessage("dispach/"+orderId);
+      // IF ORDER is Depatched right -> this.orders = this.orders.filter(order => order.id !== orderId);
+      this.http.dispatchOrder(orderId).subscribe({
+        next: data => {
+          this.orders = this.orders.filter(order => order.id !== orderId);
+        },
+        error: err => console.log(err)
+      });
+      //this.webSocketService.sendMessage("dispach/"+orderId);
     }
   }
 

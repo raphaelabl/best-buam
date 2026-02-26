@@ -1,12 +1,10 @@
 <div class="container mt-3" *ngIf="buffetName !== ''">
-  <h2 class="text-center">{{roleService.getFirstName()}} - Aktuelle Bestellungen</h2>
-
   <!-- Bestellungen als Cards anzeigen -->
   <div class="row">
     <div class="col-md-4 mb-3" *ngFor="let order of orders">
       <div (click)="completeOrder(order.id!)" class="card" [ngClass]="{ 'in-progress': order.order.preparationStatus === 0, 'completed': order.order.preparationStatus === 1 }">
-        <div class="card-header">
-          <h4>Bestellung Nr.{{ order.id.split("_")[1] }} TischNr. {{order.order.tableNr}}</h4>
+        <div>
+          <h4>{{ order.id }} {{order.order.waiter.lastName}}</h4>
         </div>
         <div class="card-body">
           <ul class="list-group">

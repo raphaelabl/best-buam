@@ -4,9 +4,11 @@ import at.raphael.boundary.websockets.OrderWebsockets;
 import at.raphael.entity.Buffet;
 import at.raphael.entity.Order;
 import at.raphael.entity.OrderPosition;
+import at.raphael.entity.dto.BuffetOrderDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.core.Response;
 import org.jboss.logging.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,19 +27,37 @@ public class OrderService {
     OrderWebsockets orderWebsockets;
 
     @Inject
-    Logger logger;
+    Logger log;
 
-    public Order processOrder(Order order){
+    @Transactional
+    public Response processOrder(Order order){
+
+        Order persisted = order.persistOrder();
+
+        if(persisted == null) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Order is already persited").build();
+        }
 
         List<Buffet> inOrderIncludedBuffets = getBuffetsFromOrder(order);
 
+        orderWebsockets.sendOrderToAllClients(order);
+
         for (Buffet buffet : inOrderIncludedBuffets) {
             if(!orderWebsockets.isBuffetActive(buffet.id)) {
-                printService.createBillAndPrint(order, buffet);
+                List<OrderPosition> positions = printService.createBillAndPrint(order, buffet);
+
+                // Settings all Directly Printed Order Positions to dispached
+                for (OrderPosition position : positions) {
+                    order.positions
+                            .stream()
+                            .filter(element -> Objects.equals(element.id, position.id))
+                            .findFirst()
+                            .ifPresent(element -> element.dispached = true);
+                }
             }
         }
 
-        return order;
+        return Response.ok(order).build();
 
     }
 
@@ -59,5 +79,51 @@ public class OrderService {
 
         return includedBuffets;
     }
+
+    public boolean DispatchOrder(String buffetName, Long orderId) {
+        Order o = Order.findById(orderId);
+
+        log.info("BUFFETNAME:" +buffetName);
+        Buffet b = Buffet.find("login", buffetName).firstResult();
+
+        if (o == null || b == null) {
+            log.info("Order: " + o + ", Buffet: " + b);
+            return false;
+        }
+
+        //orderService.processOrder(o);
+
+        BuffetOrderDTO dto = createBuffetOrder(o, b);
+
+        for (OrderPosition orderPosition : dto.order.positions) {
+            orderPosition.dispached = true;
+        }
+
+        printService.createBillAndPrint(o, b);
+
+        return true;
+    }
+
+    public BuffetOrderDTO createBuffetOrder(Order o, Buffet b){
+        BuffetOrderDTO result = new BuffetOrderDTO();
+
+        result.id = b.name + "_" + o.id.toString();
+        result.order = new Order(); // New Instance because otherwise it gets delted
+        result.order.id = o.id;
+        result.order.positions = o.positions;
+        result.order.tableNr = o.tableNr;
+        result.order.waiter = o.waiter;
+
+        log.info("Waiter: " + result.order.waiter.firstName + " " + result.order.waiter.lastName);
+
+        // Filtere nur die Positionen für den spezifischen Buffet
+        result.order.positions = result.order.positions.stream()
+                .filter(element -> b.items.stream()
+                        .anyMatch(bI -> Objects.equals(bI.id, element.item.id)))
+                .toList();
+
+        return result;
+    }
+
 
 }

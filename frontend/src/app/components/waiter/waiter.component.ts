@@ -26,6 +26,9 @@ export class WaiterComponent implements OnInit {
   payTogether: boolean = true;
   selectedSeparateBill: boolean = false;
 
+  pressedOnce=false;
+
+
   changeSteps: number[] = [0.50,1,2,5,10,20,50,100];
   paidAmount = 0;
 
@@ -228,8 +231,10 @@ export class WaiterComponent implements OnInit {
 
 
   completePayment() {
+    this.pressedOnce = true;
 
     this.newOrder.statusPayed = true;
+    this.newOrder.waiter.username = this.roleService.getUserName()!;
 
     this.http.postOrder(this.newOrder).subscribe({
         next: data => {
@@ -238,7 +243,7 @@ export class WaiterComponent implements OnInit {
           this.newOrder = {positions: [], waiter: {}};
           this.paidAmount = 0;
           this.specialOrderPosition = {}
-
+          this.pressedOnce = false;
         },
         error: err => {
           console.log(err);

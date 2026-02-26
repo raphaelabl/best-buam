@@ -1,10 +1,10 @@
 version: '3.8'
 
 services:
-  keycloak:
+  bestbuam-keycloak:
     image: keycloak/keycloak:24.0.1
     platform: linux/arm64
-    container_name: keycloak
+    container_name: bestbuam-keycloak
     command: start-dev
     environment:
       KEYCLOAK_ADMIN: admin
@@ -16,9 +16,9 @@ services:
     volumes:
       - ./keycloak_data:/opt/keycloak/data
 
-  postgres:
+  bestbuam-postgres:
     image: postgres
-    container_name: postgres
+    container_name: bestbuam-postgres
     environment:
       POSTGRES_DB: postgres
       POSTGRES_USER: postgres

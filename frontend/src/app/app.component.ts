@@ -17,11 +17,10 @@ export class AppComponent implements OnInit{
     {route: "/fest-admin", name: "Fest-Admin-Page", roles: 2},
     {route: "/waiter", name: "Kellner", roles: 3},
     {route: "/buffet", name: "Schanke", roles: 4},
-    {route: "/buffetOverview", name: "Alle Aktuellen Aufträge", roles: 2},
   ]
 
   public async ngOnInit() {
-    this.roleService.initialize()
+    this.roleService.loadUserProfile();
   }
 
   logout() {

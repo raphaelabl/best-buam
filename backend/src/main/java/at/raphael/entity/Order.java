@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.transaction.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,24 +29,16 @@ public class Order extends PanacheEntity {
 
     }
 
-    public void updateEntity(Order newEntity) {
-        this.tableNr = newEntity.tableNr;
-        this.waiter = newEntity.waiter.persistOrUpdate();
-        this.status = newEntity.status;
 
-        this.positions = new ArrayList<>();
-        for(OrderPosition pos : newEntity.positions) {
-            this.positions.add(pos.persistOrUpdate());
-        }
-
-    }
-
-    public Order persistOrUpdate(){
+    public Order persistOrder(){
         if(this.id == null || this.id == 0) {
             this.id = null;
-            this.persist();
 
-            this.waiter = this.waiter.persistOrUpdate();
+            if (this.waiter != null && this.waiter.username != null) {
+                this.waiter = Waiter.find("username", this.waiter.username).firstResult();
+            }
+
+            this.persist();
 
             for (OrderPosition pos : this.positions) {
                 pos.persistOrUpdate();
@@ -54,8 +47,7 @@ public class Order extends PanacheEntity {
             return this;
         }
 
-        Order order = Order.findById(this.id);
-        order.updateEntity(this);
-        return order;
+        return null;
     }
+
 }

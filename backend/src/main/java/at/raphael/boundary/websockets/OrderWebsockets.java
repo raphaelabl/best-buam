@@ -35,6 +35,7 @@ public class OrderWebsockets {
 
     @Inject
     ManagedExecutor executor;
+
     @Inject
     ObjectMapper objectMapper;
 
@@ -64,7 +65,7 @@ public class OrderWebsockets {
 
             List<BuffetOrderDTO> openOrders = this.getOpenOrdersForBuffet(buffetName);
             for (BuffetOrderDTO openOrder : openOrders) {
-                sendBuffetOrder(openOrder);
+                sendBuffetOrder(openOrder, buffetName);
             }
 
         } catch (Exception e) {
@@ -76,50 +77,8 @@ public class OrderWebsockets {
     @OnMessage
     public void onMessage(String message, Session session) {
 
-        // Message is seperated in Task and an DataContent specially for this Task
-        // for Example 'dispach/Buffet1_3413213 => <Task>/OrderId'
-
-        String task = message.split("/")[0];
-        String content = message.split("/")[1];
-
-        //region On Order Completed
-        if(task.equals("dispach")){
-
-            Long orderId = Long.valueOf(content.split("_")[1]);  // Verbessert: Vermeide mehrfache Aufrufe von split()
-            String buffetName = content.split("_")[0];
-
-            // Outsource in external Function, because of blocking Problems in Websockets
-            executor.execute(() -> {processOrderInTransaction(orderId, buffetName);});
-
-        }
-        //endregion
-
     }
 
-    @Transactional
-    public void processOrderInTransaction(Long orderId, String buffetName) {
-        Order o = Order.findById(orderId);
-
-        log.info("BUFFETNAME:" +buffetName);
-        Buffet b = Buffet.find("name", buffetName).firstResult();
-
-        if (o == null || b == null) {
-            log.info("Order: " + o + ", Buffet: " + b);
-            return;
-        }
-
-        //orderService.processOrder(o);
-
-
-        BuffetOrderDTO dto = createBuffetOrder(o, b);
-
-        for (OrderPosition orderPosition : dto.order.positions) {
-            orderPosition.dispached = true;
-        }
-
-        printService.createBillAndPrint(o, b);
-
-    }
 
     @Transactional
     public List<BuffetOrderDTO> getOpenOrdersForBuffet(String buffetName) {
@@ -144,19 +103,23 @@ public class OrderWebsockets {
             }
         }
 
+        if(!result.isEmpty()) {
+            result.sort((a,b) -> a.id.compareTo(b.id));
+        }
+
         return result;
     }
 
     public BuffetOrderDTO createBuffetOrder(Order o, Buffet b){
         BuffetOrderDTO result = new BuffetOrderDTO();
 
-        result.id = b.name + "_" + o.id.toString();
-        result.done = false;
+        result.id = o.id.toString();
         result.order = new Order(); // New Instance because otherwise it gets delted
         result.order.id = o.id;
         result.order.positions = o.positions;
         result.order.tableNr = o.tableNr;
         result.order.waiter = o.waiter;
+        log.info("Waiter: "+o.waiter.id+":" + o.waiter.firstName + " " + o.waiter.lastName);
 
         // Filtere nur die Positionen für den spezifischen Buffet
         result.order.positions = result.order.positions.stream()
@@ -173,6 +136,7 @@ public class OrderWebsockets {
 
         for(OrderSessions os: orderSessions){
             BuffetOrderDTO bodto = createBuffetOrder(order, os.buffet);
+            if(bodto.order.positions.isEmpty()) continue;
             try {
                 String orderJson = objectMapper.writeValueAsString(bodto);
                 log.info("Sending to Session: " + bodto);
@@ -181,17 +145,15 @@ public class OrderWebsockets {
                 log.error("Error serializing order", e);
             }
         }
-
-
     }
 
 
-    public void sendBuffetOrder(BuffetOrderDTO bodto){
+    public void sendBuffetOrder(BuffetOrderDTO bodto, String buffetName){
         try{
             String mappedBodto = objectMapper.writeValueAsString(bodto);
             orderSessions
                     .stream()
-                    .filter(element -> Objects.equals(element.buffet.name, bodto.id.split("_")[0]))
+                    .filter(element -> Objects.equals(element.buffet.login, buffetName))
                     .findFirst()
                     .ifPresent(sessions ->
                             sessions.session.getAsyncRemote().sendText(mappedBodto)

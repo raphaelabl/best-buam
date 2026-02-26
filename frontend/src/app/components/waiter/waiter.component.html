@@ -91,7 +91,7 @@
               </li>
             </ul>
           </div>
-          <button class="btn btn-primary mt-3" (click)="completePayment()">Bezahlt</button>
+          <button class="btn btn-primary mt-3" [disabled]="pressedOnce" (click)="completePayment()">Bezahlt</button>
           <button class="btn btn-danger mt-3" (click)="closeDialogs()">Abbruch</button>
         </div>
       </div>
@@ -143,7 +143,7 @@
                 </li>
               </ul>
             </div>
-            <button class="btn btn-primary mt-3" (click)="nextSeparate()">Bezahlt</button>
+            <button class="btn btn-primary mt-3"  (click)="nextSeparate()">Bezahlt</button>
           </ng-container>
           <button class="btn btn-primary mt-3" *ngIf="!selectedSeparateBill" (click)="selectedSeparateBill = true">Weiter</button>
           <button class="btn btn-danger mt-3" *ngIf="selectedSeparateBill" (click)="selectedSeparateBill = false">Zurück</button>

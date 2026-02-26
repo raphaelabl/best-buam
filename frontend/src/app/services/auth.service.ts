@@ -11,22 +11,12 @@ export class AuthService {
 
   constructor(private roleService: RoleService, private router: Router, private keycloakService: KeycloakService) { }
 
-  canActivate(requiredRoles: number[]): boolean{
+  async canActivate(requiredRoles: number[]){
 
-    console.log("Required:",requiredRoles)
-
-    if(this.roleService.checkPermission(requiredRoles)){
-
-      console.log(this.roleService.getPermissions())
-      return true
-    
-    } else {
-      console.log("error")
-      console.log(this.roleService.getPermissions());
-      
-
-      return false;
+    if(!await this.roleService.checkPermission(requiredRoles)){
+      this.router.navigate(['/home']);
     }
+    return true
   }
 
 }

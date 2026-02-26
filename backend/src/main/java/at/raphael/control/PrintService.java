@@ -1,12 +1,10 @@
 package at.raphael.control;
 
-import at.raphael.entity.Buffet;
-import at.raphael.entity.Order;
-import at.raphael.entity.OrderPosition;
-import at.raphael.entity.Printer;
+import at.raphael.entity.*;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import org.eclipse.microprofile.context.ManagedExecutor;
 import org.jboss.logging.Logger;
 
 import java.io.OutputStream;
@@ -16,6 +14,9 @@ import java.util.*;
 
 @ApplicationScoped
 public class PrintService {
+
+    @Inject
+    ManagedExecutor executor;
 
     @Inject
     Logger log;
@@ -41,15 +42,16 @@ public class PrintService {
 
     }
 
-    public void createBillAndPrint(Order o, Buffet buffet){
+    public List<OrderPosition> createBillAndPrint(Order o, Buffet buffet){
         // Filter all Order Positions from Order with the same buffet
-        List<OrderPosition> orderPositions = o.positions.stream().filter(orderPosition -> buffet.items.stream().map(item -> item.id).toList().contains(orderPosition.item.id)).toList();
-
-        createStringForPrint(o, orderPositions, buffet);
-
+        List<OrderPosition> orderPositions = o.positions
+                .stream()
+                .filter(orderPosition -> buffet.items.stream().map(item -> item.id).toList().contains(orderPosition.item.id)).toList();
+        executor.execute(() -> createStringForPrint(o, orderPositions, buffet));
+        return orderPositions;
     }
 
-    boolean createStringForPrint(Order order, List<OrderPosition> orderPositions, Buffet buffet) {
+    void createStringForPrint(Order order, List<OrderPosition> orderPositions, Buffet buffet) {
         // Erzeuge Rechnung für Buffet
         StringBuilder bill = new StringBuilder();
         bill.append("Tisch: ").append(order.tableNr).append("\n")
@@ -72,11 +74,16 @@ public class PrintService {
             boolean gotGood = sendOrderToPrinter(bill.toString(), p.ipAddress, p.port);
             if(!gotGood) {
                 log.info("Fehler beim Drucken!");
+            }else{
+                orderPositions.forEach(orderPosition -> {
+                    OrderPosition tmp = OrderPosition.findById(orderPosition.id);
+                    if(tmp != null) {
+                        tmp.dispached = true;
+                    }
+                });
+
             }
         }
-
-
-        return true;
     }
 
     boolean sendOrderToPrinter(String stringToPrint, String printerIp, String printerPort) {

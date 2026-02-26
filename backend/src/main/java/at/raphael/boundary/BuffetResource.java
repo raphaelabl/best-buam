@@ -22,6 +22,7 @@ public class BuffetResource {
         return Response.ok(buffet).build();
     }
 
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getBuffet() {

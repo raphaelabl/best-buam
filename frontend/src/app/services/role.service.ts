@@ -1,7 +1,6 @@
-import { Injectable } from '@angular/core';
-import { log } from 'console';
-import {KeycloakService} from "keycloak-angular";
+import {inject, Injectable} from '@angular/core';
 import {KeycloakProfile} from "keycloak-js";
+import {KeycloakService} from "keycloak-angular";
 
 @Injectable({
   providedIn: 'root'
@@ -9,17 +8,13 @@ import {KeycloakProfile} from "keycloak-js";
 export class RoleService {
 
   roleMap: Map<string, number> = new Map;
-  roles: string[] = [];
-  public userProfile: KeycloakProfile | null = null;
+  roles: number[] = [];
+  keycloakProfile?: KeycloakProfile = undefined;
+  keycloakService: KeycloakService = inject(KeycloakService);
 
-  constructor(private keycloak: KeycloakService) {
+  constructor() {
 
-    // Zuteilung der Rollen auf levels(numbers) für einfachere Zurodnung
-    //ADMIN also ich hhahahhahah:1
-    //Fest-Admin:2
-    //Kellner:3
-    //Schanken:4
-
+    this.roleMap.set("Not Found", -1)
     this.roleMap.set("admin", 1)
     this.roleMap.set("party-admin", 2)
     this.roleMap.set("waiter", 3)
@@ -27,53 +22,39 @@ export class RoleService {
 
   }
 
-  async initialize(): Promise<void> {
-    try {
-      console.log("THIS IS INITIALIZED")
-      await this.loadUserProfile();
-      await this.loadUserRoles();
-    } catch (error) {
-      console.error('Error initializing RoleService:', error);
-    }
+  logout(){
+    this.keycloakService.logout();
   }
 
-  private async loadUserProfile(): Promise<void> {
-    try {
-      this.userProfile = await this.keycloak.loadUserProfile();
-      console.log(this.userProfile)
-
-    } catch (error) {
-      console.error('Error loading user profile:', error);
-    }
+  isLoggedIn(){
+    return !!this.keycloakProfile;
   }
 
-  private async loadUserRoles(): Promise<void> {
-    try {
-      this.roles = await this.keycloak.getUserRoles();
-
-      console.log("MY USER ROLES")
-      console.log(this.roles)
-
-    } catch (error) {
-      console.error('Error loading user roles:', error);
+  async loadUserProfile() {
+    if(this.keycloakService.isLoggedIn()){
+      this.keycloakProfile = await this.keycloakService.loadUserProfile();
     }
   }
 
   checkPermission(requiredRoles: number[]) {
+    console.log(requiredRoles);
+    console.log(this.roles);
+    if(this.roles && this.roles.length === 0){
+      return false;
+    }
 
-
-    return true;
-
-  }
+   return requiredRoles.some(role => this.roles.includes(role));
+}
 
   containsRole(requiredRole: number){
-    return this.roles
-    .map(role => this.roleMap.get(role))
-    .includes(requiredRole);
-  }
+    const token = this.keycloakService.getKeycloakInstance()?.tokenParsed;
 
-  getAllUser(){
+    if(!token) return false;
 
+    const clientRoles: string[] = token.resource_access?.['bestbuam-frontend']?.roles ?? [];
+    this.roles = clientRoles.map(role => this.roleMap.get(role) || -1);
+
+    return this.roles.includes(requiredRole);
   }
 
   getPermissions() {
@@ -81,26 +62,16 @@ export class RoleService {
   }
 
   getEmail(){
-    //return "none";
-    return this.userProfile!.email;
+    return this.keycloakProfile!.email;
   }
 
   getUserName() {
-    //return "none"
-    return this.userProfile!.username;
+    return this.keycloakProfile!.username;
   }
 
   getFirstName(){
-    return this.userProfile!.firstName;
+    return this.keycloakProfile!.firstName;
   }
 
-  setRoles(roles: string[]) {
-
-    this.roles = roles;
-  }
-
-  setProfile(profile: KeycloakProfile) {
-    this.userProfile = profile;
-  }
 
 }

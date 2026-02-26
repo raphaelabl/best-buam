@@ -34,7 +34,11 @@ public class Waiter extends PanacheEntity {
     }
 
     public Waiter persistOrUpdate(){
+
         if(this.id == null || this.id == 0) {
+
+
+
             this.id = null;
 
             this.persist();

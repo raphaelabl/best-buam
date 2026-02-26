@@ -7,13 +7,14 @@ import {Buffet} from "../models/buffet";
 import {Order} from "../models/order";
 import {Waiter} from "../models/waiter";
 import {PartyAdmin} from "../models/party-admin";
+import {RoleService} from "./role.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpService {
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private roleService: RoleService) {
   }
 
   // Party Resources
@@ -43,6 +44,7 @@ export class HttpService {
     return this.http.post<Buffet>(environment.API_URL + "buffet", newBuffet)
   }
 
+
   // Order Resource
   postOrder(newOrder: Order): Observable<Order>{
     return this.http.post<Order>(environment.API_URL + "order", newOrder)
@@ -50,6 +52,10 @@ export class HttpService {
 
   getOrders(): Observable<Order[]>{
     return this.http.get<Order[]>(environment.API_URL + "order");
+  }
+
+  dispatchOrder(orderId: string): Observable<string> {
+    return this.http.get<string>(environment.API_URL + "order/dispatch", {params: {orderId: orderId, buffetName: this.roleService.getUserName()||""}});
   }
 
   // Keycloak

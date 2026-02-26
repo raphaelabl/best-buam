@@ -9,7 +9,7 @@ import {authGuard} from "./services/auth.service";
 
 export const routes: Routes = [
   { path: 'admin', component: AdminComponent, canActivate: [authGuard], data: { requiredRoles: [1] }},
-  { path: 'home', component: DashboardComponent,canActivate: [authGuard], data: { requiredRoles: [1, 2, 3] }},
+  { path: 'home', component: DashboardComponent},
   { path: 'waiter', component: WaiterComponent,canActivate: [authGuard], data: { requiredRoles: [1, 2, 3] }},
   { path: 'fest-admin', component: PartyAdminComponent,canActivate: [authGuard], data: { requiredRoles: [1, 2] }},
   { path: 'buffet', component: BuffetComponent,canActivate: [authGuard], data: { requiredRoles: [1, 4] }},
