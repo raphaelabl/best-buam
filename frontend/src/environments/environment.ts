@@ -1,5 +1,5 @@
 export const environment = {
-  production: false,
+  production: true,
   API_URL: "https://bestell.ffbruckmuehl.at/api",
   WS_URL: "ws://bestell.ffbruckmuehl.at/",
   keycloak: {
