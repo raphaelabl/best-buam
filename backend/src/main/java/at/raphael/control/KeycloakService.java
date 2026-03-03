@@ -105,5 +105,4 @@ public class KeycloakService {
         keycloak.close();
     }
 
-
 }
