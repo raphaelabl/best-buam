@@ -15,7 +15,16 @@ import java.util.Optional;
 @ApplicationScoped
 public class KeycloakService {
 
-    final String realm = "bestbuam";
+    @ConfigProperty(name="keycloak.host")
+    String host;
+    @ConfigProperty(name="keycloak.realm")
+    String realm;
+
+    @ConfigProperty(name="keycloak.admin.username")
+    String adminUsername;
+    @ConfigProperty(name="keycloak.admin.password")
+    String adminPassword;
+    
 
     private Keycloak keycloak;
 
@@ -81,12 +90,12 @@ public class KeycloakService {
     @PostConstruct
     public void initKeycloak() {
         keycloak = KeycloakBuilder.builder()
-                .serverUrl("https://bestell.ffbruckmuehl.at/auth/")
+                .serverUrl(host)
                 .realm("master")
                 .clientId("admin-cli")
                 .grantType("password")
-                .username("admin")
-                .password("admin")
+                .username(adminUsername)
+                .password(adminPassword)
                 .build();
     }
 
