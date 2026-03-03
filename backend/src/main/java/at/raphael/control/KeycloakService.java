@@ -81,7 +81,7 @@ public class KeycloakService {
     @PostConstruct
     public void initKeycloak() {
         keycloak = KeycloakBuilder.builder()
-                .serverUrl("http://localhost:8081/auth/")
+                .serverUrl("https://bestell.ffbruckmuehl.at/auth/")
                 .realm("master")
                 .clientId("admin-cli")
                 .grantType("password")
