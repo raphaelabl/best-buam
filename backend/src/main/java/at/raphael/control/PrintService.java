@@ -47,9 +47,12 @@ public class PrintService {
         List<OrderPosition> orderPositions = o.positions
                 .stream()
                 .filter(orderPosition -> buffet.items.stream().map(item -> item.id).toList().contains(orderPosition.item.id)).toList();
-        executor.execute(() -> createStringForPrint(o, orderPositions, buffet));
+
+        createStringForPrint(o, orderPositions, buffet);
+
         return orderPositions;
     }
+
 
     void createStringForPrint(Order order, List<OrderPosition> orderPositions, Buffet buffet) {
         // Erzeuge Rechnung für Buffet
@@ -71,18 +74,14 @@ public class PrintService {
         }
         bill.append("\n\n\n");
         for(Printer p : buffet.printers) {
-            boolean gotGood = sendOrderToPrinter(bill.toString(), p.ipAddress, p.port);
-            if(!gotGood) {
-                log.info("Fehler beim Drucken!");
-            }else{
-                orderPositions.forEach(orderPosition -> {
-                    OrderPosition tmp = OrderPosition.findById(orderPosition.id);
-                    if(tmp != null) {
-                        tmp.dispached = true;
-                    }
-                });
 
-            }
+            executor.execute(() -> {
+                boolean gotGood = sendOrderToPrinter(bill.toString(), p.ipAddress, p.port);
+
+                if(!gotGood) {
+                    log.info("Fehler beim Drucken!");
+                }
+            });
         }
     }
 

@@ -80,6 +80,7 @@ public class OrderService {
         return includedBuffets;
     }
 
+    @Transactional
     public boolean DispatchOrder(String buffetName, Long orderId) {
         Order o = Order.findById(orderId);
 

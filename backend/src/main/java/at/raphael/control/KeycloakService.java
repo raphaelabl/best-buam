@@ -20,7 +20,6 @@ public class KeycloakService {
     String host;
     @ConfigProperty(name="keycloak.realm")
     String realm;
-
     @ConfigProperty(name="keycloak.admin.username")
     String adminUsername;
     @ConfigProperty(name="keycloak.admin.password")

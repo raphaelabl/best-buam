@@ -42,7 +42,6 @@ public class OrderResource {
 
     @GET
     @Path("dispatch")
-    @Transactional
     public Response dispatchBuffetOrder(@QueryParam("buffetName") String buffetName, @QueryParam("orderId") Long orderId){
         // If Buffetname or OrderId is not Found, return error not found
         if(buffetName == null || orderId == null){
