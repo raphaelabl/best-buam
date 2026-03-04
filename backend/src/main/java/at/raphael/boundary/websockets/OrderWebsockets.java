@@ -32,17 +32,10 @@ public class OrderWebsockets {
 
     @Inject
     Logger log;
-
     @Inject
     ManagedExecutor executor;
-
     @Inject
     ObjectMapper objectMapper;
-
-    @Inject
-    OrderService orderService;
-    @Inject
-    PrintService printService;
 
     private Set<OrderSessions> orderSessions = new HashSet<>();
 
@@ -76,7 +69,6 @@ public class OrderWebsockets {
 
     @OnMessage
     public void onMessage(String message, Session session) {
-
     }
 
 

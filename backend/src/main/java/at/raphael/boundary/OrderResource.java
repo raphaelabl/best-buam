@@ -1,9 +1,7 @@
 package at.raphael.boundary;
 
-import at.raphael.boundary.websockets.OrderWebsockets;
 import at.raphael.control.OrderService;
 import at.raphael.entity.Order;
-import at.raphael.entity.Waiter;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
