@@ -1,0 +1,22 @@
+.item-div{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.itemName{
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.itemDispatched{
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: red;
+}
+
+.itemPreparation{
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: green;
+}

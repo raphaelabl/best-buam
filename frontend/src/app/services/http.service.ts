@@ -8,6 +8,7 @@ import {Order} from "../models/order";
 import {Waiter} from "../models/waiter";
 import {PartyAdmin} from "../models/party-admin";
 import {RoleService} from "./role.service";
+import {PreparationDto} from "../models/dto/preparation-dto";
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +38,11 @@ export class HttpService {
 
   getPartyPerAdmin(adminEmail: string): Observable<Party[]>{
     return this.http.get<Party[]>(environment.API_URL + "party/adminEmail", {params: {adminEmail: adminEmail}});
+  }
+
+  // Preparation Resources
+  getPreparationAmounts(buffetName: string): Observable<PreparationDto[]>{
+    return this.http.get<PreparationDto[]>(environment.API_URL + "preparation", {params: {buffetName: buffetName}});
   }
 
   // Buffet Resources

@@ -12,6 +12,10 @@ export class WebSocketService {
 
   constructor() {}
 
+  connectPreperation(name: string): void {
+    this.socket = new WebSocket(environment.WS_URL + "preparation/"+name);
+  }
+
   connect(name: string): void {
     this.socket = new WebSocket(environment.WS_URL + "order/"+name);
 
