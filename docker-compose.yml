@@ -3,14 +3,21 @@ version: '3.8'
 services:
   bestbuam-keycloak:
     image: keycloak/keycloak:24.0.1
-    platform: linux/arm64
     container_name: bestbuam-keycloak
-    command: start-dev
+    command: >
+      start-dev
+      --hostname-strict=false
     environment:
+      KC_DB: postgres
+      KC_DB_URL:jdbc:postgresql://bestbuam-postgres:5432/postgres
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: postgres
+
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
+
+      KC_HTTP_ENABLED: true
       KC_HTTP_RELATIVE_PATH: /auth
-      KC_HOSTNAME_STRICT: "false"
     ports:
       - "8081:8080"
     volumes:
@@ -24,6 +31,6 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - ./postgres-data:/var/lib/postgresql
     ports:
       - "5432:5432"
