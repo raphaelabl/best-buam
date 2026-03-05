@@ -1,10 +1,13 @@
 <div class="container mt-5">
-  <div>
+  <div class="item-table">
     @for (preperation of preparations; track preperation.itemName) {
       <div class="item-div">
         <span class="itemName">{{preperation.itemName}}</span>
-        <span class="itemDispatched">{{preperation.dispatchedAmount}}</span>
-        <span class="itemPreparation">{{preperation.preparationAmount}}</span>
+        <div class="preparationView">
+          <span class="itemDispatched">{{preperation.dispatchedAmount}}</span>
+          <span class="itemName">|</span>
+          <span class="itemPreparation">{{preperation.preparationAmount}}</span>
+        </div>
       </div>
     }
   </div>
