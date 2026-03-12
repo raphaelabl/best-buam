@@ -69,9 +69,15 @@ public class OrderWebsockets {
 
     @OnMessage
     public void onMessage(String message, Session session) {
-        if(message.equals("ping")){
-            session.getAsyncRemote().sendText("pong");
-            return;
+        String[] splitMessage = message.split(":");
+        if(splitMessage.length != 2) return;
+        if(splitMessage[0].equals("ping")){
+            // Only if Websocket is connected with right buffet name
+            orderSessions.stream()
+                    .filter(element -> element.buffet.login.equals(splitMessage[1]))
+                    .findFirst()
+                    .ifPresent(element ->
+                    session.getAsyncRemote().sendText("pong"));
         }
     }
 

@@ -9,6 +9,7 @@ export class WebSocketService {
 
   socket!: WebSocket;
   messages: Subject<string> = new Subject<string>();
+  buffetName: string = "";
 
   private connectionStatus = new BehaviorSubject<boolean>(false);
 
@@ -19,6 +20,7 @@ export class WebSocketService {
 
   connect(name: string): void {
     this.socket = new WebSocket(environment.WS_URL + "order/"+name);
+    this.buffetName = name;
 
     this.socket.onopen = () => {
       console.log('WebSocket connection established');
@@ -76,8 +78,8 @@ export class WebSocketService {
   private startHeartbeat() {
     this.heartbeatInterval = setInterval(() => {
         if(this.socket.readyState !== WebSocket.OPEN) return;
-        console.log("ping");
-        this.socket.send("ping");
+        console.log("ping:"+this.buffetName);
+        this.socket.send("ping:"+this.buffetName);
         this.heartbeatTimeout = setTimeout(() => {
           console.log("timeout");
           this.connectionStatus.next(false);
