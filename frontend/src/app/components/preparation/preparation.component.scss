@@ -1,22 +1,37 @@
 .item-div{
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   gap: 10px;
+  border-bottom: 2px solid black;
+  padding: 3rem;
 }
 
 .itemName{
   font-weight: bold;
-  font-size: 1.2rem;
+  font-size: 3rem;
 }
 
 .itemDispatched{
   font-weight: bold;
-  font-size: 1.2rem;
+  font-size: 3rem;
   color: red;
 }
 
 .itemPreparation{
   font-weight: bold;
-  font-size: 1.2rem;
+  font-size: 3rem;
   color: green;
+}
+
+.item-table{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.preparationView{
+  display: flex;
+  flex-direction: row;
+  gap: 3px;
 }
