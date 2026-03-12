@@ -5,8 +5,12 @@ import at.raphael.entity.Buffet;
 import at.raphael.entity.Order;
 import at.raphael.entity.OrderPosition;
 import at.raphael.entity.dto.BuffetOrderDTO;
+import at.raphael.entity.dto.OrderPrintDTO;
+import at.raphael.entity.dto.PositionDTO;
+import at.raphael.entity.dto.PrinterDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 import org.jboss.logging.Logger;
@@ -15,10 +19,14 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class OrderService {
 
+    @Inject
+    EntityManager entityManager;
 
     @Inject
     PrintService printService;
@@ -61,6 +69,8 @@ public class OrderService {
 
     }
 
+
+
     public List<Buffet> getBuffetsFromOrder(Order order){
         List<Buffet> allBuffets = Buffet.listAll();
         List<Buffet> includedBuffets = new ArrayList<>();
@@ -81,7 +91,7 @@ public class OrderService {
     }
 
     @Transactional
-    public boolean DispatchOrder(String buffetName, Long orderId) {
+    public OrderPrintDTO DispatchOrder(String buffetName, Long orderId) {
         Order o = Order.findById(orderId);
 
         log.info("BUFFETNAME:" +buffetName);
@@ -89,24 +99,46 @@ public class OrderService {
 
         if (o == null || b == null) {
             log.info("Order: " + o + ", Buffet: " + b);
-            return false;
+            return null;
         }
-
         //orderService.processOrder(o);
 
-        BuffetOrderDTO dto = createBuffetOrder(o, b);
+        List<OrderPosition> dto = createBuffetOrder(o, b);
 
-        for (OrderPosition orderPosition : dto.order.positions) {
+        // Hier eine Copy verwenden
+
+        for (OrderPosition orderPosition : dto) {
             orderPosition.dispached = true;
         }
 
-        printService.createBillAndPrint(o, b);
+        OrderPrintDTO hardcopy = createHardcopy(o, b, dto);
+        // Durch die übergabe des hardcopy objectes wird der fehler geworfen!
 
-        return true;
+
+        return hardcopy;
     }
 
-    public BuffetOrderDTO createBuffetOrder(Order o, Buffet b){
-        BuffetOrderDTO result = new BuffetOrderDTO();
+    public void createBillAndPrint(OrderPrintDTO printDTO){
+        // Filter all Order Positions from Order with the same buffet
+
+
+        String bill = printService.createStringForPrintFromHardcopy(printDTO);
+        printService.sendToPrintersFromBuffetFromDTO(bill, printDTO.printers());
+
+    }
+
+
+    // Unbrauchbar da das managed entity in ein anderes objekt geladen wird
+    public List<OrderPosition> createBuffetOrder(Order order, Buffet buffet){
+
+        Set<Long> buffetItemIds = buffet.items.stream()
+                .map(item -> item.id)
+                .collect(Collectors.toSet());
+        return order.positions.stream()
+                .filter(pos->buffetItemIds.contains(pos.item.id))
+                .toList();
+
+        /*BuffetOrderDTO result = new BuffetOrderDTO();
 
         result.id = b.name + "_" + o.id.toString();
         result.order = new Order(); // New Instance because otherwise it gets delted
@@ -123,7 +155,20 @@ public class OrderService {
                         .anyMatch(bI -> Objects.equals(bI.id, element.item.id)))
                 .toList();
 
-        return result;
+        return result;*/
+    }
+
+    public OrderPrintDTO createHardcopy(Order order, Buffet buffet, List<OrderPosition> orderPositions){
+        List<PositionDTO> positions = orderPositions.stream()
+                .map(pos -> new PositionDTO(pos.item.name, pos.amount, pos.spezialText, pos.isSpezial))
+                .toList();
+
+        List<PrinterDTO> printerDTOList = buffet.printers
+                .stream()
+                .map(printer -> new PrinterDTO(printer.name, printer.ipAddress, Integer.parseInt(printer.port)))
+                .toList();
+
+        return new OrderPrintDTO(order.id, order.tableNr, order.waiter.firstName + " " + order.waiter.lastName,buffet.name,positions, printerDTOList);
     }
 
 

@@ -20,11 +20,20 @@ export class BuffetComponent implements OnInit{
 
   orderSubscription!: Subscription;
 
+  connectionStatus = true;
+
   constructor(private webSocketService: WebSocketService, public roleService: RoleService, private http: HttpService) {
   }
 
   ngOnInit(): void {
     this.loadData();
+    this.connectionObserver();
+  }
+
+  public connectionObserver() {
+    this.webSocketService.getConnectionStatus().subscribe(status => {
+      this.connectionStatus = status;
+    });
   }
 
   loadData() {

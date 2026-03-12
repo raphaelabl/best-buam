@@ -69,6 +69,10 @@ public class OrderWebsockets {
 
     @OnMessage
     public void onMessage(String message, Session session) {
+        if(message.equals("ping")){
+            session.getAsyncRemote().sendText("pong");
+            return;
+        }
     }
 
 

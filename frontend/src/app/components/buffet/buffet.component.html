@@ -1,3 +1,10 @@
+<div *ngIf="connectionStatus; else disconnected">
+  🟢 Verbunden
+</div>
+
+<ng-template #disconnected>
+  🔴 Nicht verbunden
+</ng-template>
 <div class="container mt-3" *ngIf="buffetName !== ''">
   <!-- Bestellungen als Cards anzeigen -->
   <div class="row">
