@@ -61,7 +61,8 @@ export class BuffetComponent implements OnInit{
     var o = this.orders.find(order => order.id === orderId)!.order;
     if(o.preparationStatus == 0){
       o.preparationStatus = 1;
-    }else{
+    }else if(o.preparationStatus == 1){
+      o.preparationStatus = 2;
       // IF ORDER is Depatched right -> this.orders = this.orders.filter(order => order.id !== orderId);
       this.http.dispatchOrder(orderId).subscribe({
         next: data => {

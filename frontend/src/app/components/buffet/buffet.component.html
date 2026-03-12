@@ -9,7 +9,7 @@
   <!-- Bestellungen als Cards anzeigen -->
   <div class="row">
     <div class="col-md-4 mb-3" *ngFor="let order of orders">
-      <div (click)="completeOrder(order.id!)" class="card" [ngClass]="{ 'in-progress': order.order.preparationStatus === 0, 'completed': order.order.preparationStatus === 1 }">
+      <div (click)="completeOrder(order.id!)" class="card" [ngClass]="{ 'in-progress': order.order.preparationStatus === 0, 'completed': (order.order.preparationStatus === 1 || order.order.preparationStatus === 2) }">
         <div>
           <h4>{{ order.id }} {{order.order.waiter.lastName}}</h4>
         </div>
