@@ -6,6 +6,7 @@ import {PartyAdminComponent} from "./components/party-admin/party-admin.componen
 import {WaiterComponent} from "./components/waiter/waiter.component";
 import {BuffetComponent} from "./components/buffet/buffet.component";
 import {authGuard} from "./services/auth.service";
+import {PreparationComponent} from "./components/preparation/preparation.component";
 
 export const routes: Routes = [
   { path: 'admin', component: AdminComponent, canActivate: [authGuard], data: { requiredRoles: [1] }},
@@ -13,6 +14,7 @@ export const routes: Routes = [
   { path: 'waiter', component: WaiterComponent,canActivate: [authGuard], data: { requiredRoles: [1, 2, 3] }},
   { path: 'fest-admin', component: PartyAdminComponent,canActivate: [authGuard], data: { requiredRoles: [1, 2] }},
   { path: 'buffet', component: BuffetComponent,canActivate: [authGuard], data: { requiredRoles: [1, 4] }},
+  { path: 'preparation', component: PreparationComponent,canActivate: [authGuard], data: { requiredRoles: [1, 4] }},
   { path: '', redirectTo: '/home', pathMatch: 'full'},
   { path: '**', redirectTo: '/home'},
 ];
