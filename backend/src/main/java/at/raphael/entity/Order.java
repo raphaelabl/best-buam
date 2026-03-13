@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.transaction.Transactional;
 
 @Entity
 @Table(name = "bill_order")
@@ -26,6 +27,7 @@ public class Order extends PanacheEntity {
 
     }
 
+    @Transactional
     public Order persistOrder() {
         if (this.id == null || this.id == 0) {
             this.id = null;

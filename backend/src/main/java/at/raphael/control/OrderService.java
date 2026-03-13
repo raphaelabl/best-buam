@@ -32,7 +32,6 @@ public class OrderService {
     @Inject
     Logger log;
 
-    @Transactional
     public Response processOrder(Order order){
 
         Order persisted = order.persistOrder();
@@ -41,13 +40,16 @@ public class OrderService {
             return Response.status(Response.Status.BAD_REQUEST).entity("Order is already persited").build();
         }
 
-        List<Buffet> inOrderIncludedBuffets = getBuffetsFromOrder(order);
+        List<Buffet> inOrderIncludedBuffets = getBuffetsFromOrder(persisted);
 
         orderWebsockets.sendOrderToAllClients(order);
 
         for (Buffet buffet : inOrderIncludedBuffets) {
             if(!orderWebsockets.isBuffetActive(buffet.id)) {
-                List<OrderPosition> positions = printService.createBillAndPrint(order, buffet);
+                OrderPrintDTO printDTO = DispatchOrder(buffet.login, persisted.id);
+                createBillAndPrint(printDTO);
+
+                /*List<OrderPosition> positions = printService.createBillAndPrint(order, buffet);
 
                 // Settings all Directly Printed Order Positions to dispached
                 for (OrderPosition position : positions) {
@@ -56,7 +58,7 @@ public class OrderService {
                             .filter(element -> Objects.equals(element.id, position.id))
                             .findFirst()
                             .ifPresent(element -> element.dispached = true);
-                }
+                }*/
             }
         }
 
@@ -67,7 +69,20 @@ public class OrderService {
 
 
     public List<Buffet> getBuffetsFromOrder(Order order){
-        List<Buffet> allBuffets = Buffet.listAll();
+        List<Long> itemIds = order.positions.stream()
+                .map(p -> p.item.id)
+                .toList();
+
+        if (itemIds.isEmpty()) {
+            return List.of();
+        }
+
+        return Buffet.find(
+                "select distinct b from Buffet b join b.items i where i.id in ?1",
+                itemIds
+        ).list();
+        // Get all Buffet IDs
+        /*List<Buffet> allBuffets = Buffet.listAll();
         List<Buffet> includedBuffets = new ArrayList<>();
 
 
@@ -82,15 +97,15 @@ public class OrderService {
             }
         }
 
-        return includedBuffets;
+        return includedBuffets;*/
     }
 
     @Transactional
-    public OrderPrintDTO DispatchOrder(String buffetName, Long orderId) {
+    public OrderPrintDTO DispatchOrder(String buffetLogin, Long orderId) {
         Order o = Order.findById(orderId);
 
-        log.info("BUFFETNAME:" +buffetName);
-        Buffet b = Buffet.find("login", buffetName).firstResult();
+        log.info("BUFFETNAME:" +buffetLogin);
+        Buffet b = Buffet.find("login", buffetLogin).firstResult();
 
         if (o == null || b == null) {
             log.info("Order: " + o + ", Buffet: " + b);
@@ -111,7 +126,6 @@ public class OrderService {
 
     public void createBillAndPrint(OrderPrintDTO printDTO){
         // Filter all Order Positions from Order with the same buffet
-
         String bill = printService.createStringForPrintFromHardcopy(printDTO);
         printService.sendToPrintersFromBuffetFromDTO(bill, printDTO.printers());
 
