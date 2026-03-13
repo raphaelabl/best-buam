@@ -1,15 +1,22 @@
 package at.raphael.boundary.websockets;
 
-import at.raphael.control.OrderService;
-import at.raphael.control.PrintService;
-import at.raphael.entity.Buffet;
-import at.raphael.entity.Order;
-import at.raphael.entity.OrderPosition;
-import at.raphael.entity.dto.BuffetOrderDTO;
-import at.raphael.entity.dto.OrderSessions;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+
+import org.eclipse.microprofile.context.ManagedExecutor;
+import org.jboss.logging.Logger;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.smallrye.common.annotation.Blocking;
+
+import at.raphael.entity.Buffet;
+import at.raphael.entity.Order;
+import at.raphael.entity.dto.BuffetOrderDTO;
+import at.raphael.entity.dto.OrderSessions;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -19,11 +26,6 @@ import jakarta.websocket.OnOpen;
 import jakarta.websocket.Session;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
-import org.eclipse.microprofile.context.ManagedExecutor;
-import org.jboss.logging.Logger;
-
-import java.io.BufferedReader;
-import java.util.*;
 
 
 @ServerEndpoint("/order/{buffetName}")

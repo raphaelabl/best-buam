@@ -111,7 +111,7 @@ public class PrintService {
 
     void sendToPrintersFromBuffet(String stringToPrint, Buffet buffet) {
         for(Printer p : buffet.printers) {
-            String printerIp = p.ipAddress.toString();
+            String printerIp = p.ipAddress;
             int printerPort = Integer.parseInt(p.port);
             executor.execute(() -> {
                 log.info(printerIp + ":" + printerPort);

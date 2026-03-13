@@ -55,15 +55,13 @@ export class WaiterComponent implements OnInit {
   //region OrderManagement
   addToOrder(orderPosition: OrderPosition) {
 
-    if(orderPosition.editId === null || orderPosition.editId === undefined){
-     orderPosition.editId = orderPosition.item!.id!.toString();
-    }
-    const index = this.newOrder!.positions.findIndex(element => element.editId === orderPosition.editId);
+    orderPosition.editId ??= orderPosition.item!.id!.toString();
+    const index = this.newOrder.positions.findIndex(element => element.editId === orderPosition.editId);
 
     if(index === null || index === undefined || index === -1){
-      this.newOrder!.positions.push({item: orderPosition.item, amount: 1, editId: orderPosition.item!.id!.toString()});
+      this.newOrder.positions.push({item: orderPosition.item, amount: 1, editId: orderPosition.item!.id!.toString()});
     }else{
-      this.newOrder!.positions[index].amount! += 1;
+      this.newOrder.positions[index].amount! += 1;
     }
 
   }
@@ -84,13 +82,13 @@ export class WaiterComponent implements OnInit {
       if(this.specialOrderPosition.editId === null || this.specialOrderPosition.editId === undefined || this.specialOrderPosition.editId === ""){
         this.specialOrderPosition.editId = this.getNextSpezialId(this.specialOrderPosition.item!.id!.toString());
         this.specialOrderPosition.isSpezial = true;
-        this.newOrder!.positions.push({...this.specialOrderPosition});
+        this.newOrder.positions.push({...this.specialOrderPosition});
         this.specialOrderPosition = {};
       }else{
-        let index = this.newOrder!.positions.findIndex(element => element.editId === this.specialOrderPosition.editId);
+        let index = this.newOrder.positions.findIndex(element => element.editId === this.specialOrderPosition.editId);
 
         if(index !== null && index !== undefined && index !== -1){
-          this.newOrder!.positions[index] = {...this.specialOrderPosition};
+          this.newOrder.positions[index] = {...this.specialOrderPosition};
           this.specialOrderPosition = {}
         }
       }
@@ -100,7 +98,7 @@ export class WaiterComponent implements OnInit {
   getNextSpezialId(itemId: string): string {
     const currentId = "S_"+itemId;
 
-    if(this.newOrder!.positions.findIndex(element => currentId === element.editId) === -1){
+    if(this.newOrder.positions.some(element => currentId === element.editId)){
       return currentId;
     }
 
@@ -108,14 +106,14 @@ export class WaiterComponent implements OnInit {
   }
 
   removeOrderPostion(editId: string){
-    let op = this.newOrder!.positions.find(element => element.editId! === editId);
+    let op = this.newOrder.positions.find(element => element.editId === editId);
 
     if(op!.amount! > 1){
       op!.amount! -= 1
       return;
     }
 
-    this.newOrder!.positions = this.newOrder!.positions.filter(element => element.editId !== editId);
+    this.newOrder.positions = this.newOrder.positions.filter(element => element.editId !== editId);
   }
 
   closeDialogs() {
@@ -185,8 +183,7 @@ export class WaiterComponent implements OnInit {
     const oldIndex = this.cloneArticles.findIndex(element => element.editId === orderPosition.editId);
     if(oldIndex === null || oldIndex === undefined || oldIndex === -1){
       return;
-    }else{
-      if(this.cloneArticles[oldIndex].amount! > 0){
+    }else if(this.cloneArticles[oldIndex].amount! > 0){
         const seperateIndex = this.separateBill.findIndex(element => element.editId === orderPosition.editId);
 
         if(seperateIndex === null || seperateIndex === undefined || seperateIndex === -1){
@@ -196,14 +193,13 @@ export class WaiterComponent implements OnInit {
         }
 
         this.cloneArticles[oldIndex].amount! -= 1;
-      }
     }
 
     console.log(this.separateBill)
   }
 
   removeFromBill(orderPosition: OrderPosition){
-    let op = this.separateBill!.find(element => element.editId! === orderPosition.editId);
+    let op = this.separateBill.find(element => element.editId === orderPosition.editId);
 
     if(op!.amount! > 1){
       op!.amount! -= 1

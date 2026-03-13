@@ -1,32 +1,27 @@
 package at.raphael.control;
 
-import at.raphael.boundary.websockets.OrderWebsockets;
-import at.raphael.entity.Buffet;
-import at.raphael.entity.Order;
-import at.raphael.entity.OrderPosition;
-import at.raphael.entity.dto.BuffetOrderDTO;
-import at.raphael.entity.dto.OrderPrintDTO;
-import at.raphael.entity.dto.PositionDTO;
-import at.raphael.entity.dto.PrinterDTO;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
-import jakarta.ws.rs.core.Response;
-import org.jboss.logging.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.jboss.logging.Logger;
+
+import at.raphael.boundary.websockets.OrderWebsockets;
+import at.raphael.entity.Buffet;
+import at.raphael.entity.Order;
+import at.raphael.entity.OrderPosition;
+import at.raphael.entity.dto.OrderPrintDTO;
+import at.raphael.entity.dto.PositionDTO;
+import at.raphael.entity.dto.PrinterDTO;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.core.Response;
+
 @ApplicationScoped
 public class OrderService {
-
-    @Inject
-    EntityManager entityManager;
 
     @Inject
     PrintService printService;
@@ -111,16 +106,11 @@ public class OrderService {
             orderPosition.dispached = true;
         }
 
-        OrderPrintDTO hardcopy = createHardcopy(o, b, dto);
-        // Durch die übergabe des hardcopy objectes wird der fehler geworfen!
-
-
-        return hardcopy;
+        return createHardcopy(o, b, dto);
     }
 
     public void createBillAndPrint(OrderPrintDTO printDTO){
         // Filter all Order Positions from Order with the same buffet
-
 
         String bill = printService.createStringForPrintFromHardcopy(printDTO);
         printService.sendToPrintersFromBuffetFromDTO(bill, printDTO.printers());
