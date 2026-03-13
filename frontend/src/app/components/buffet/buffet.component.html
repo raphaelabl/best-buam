@@ -1,8 +1,15 @@
+<div *ngIf="connectionStatus; else disconnected">
+  🟢 Verbunden
+</div>
+
+<ng-template #disconnected>
+  🔴 Nicht verbunden
+</ng-template>
 <div class="container mt-3" *ngIf="buffetName !== ''">
   <!-- Bestellungen als Cards anzeigen -->
   <div class="row">
     <div class="col-md-4 mb-3" *ngFor="let order of orders">
-      <div (click)="completeOrder(order.id!)" class="card" [ngClass]="{ 'in-progress': order.order.preparationStatus === 0, 'completed': order.order.preparationStatus === 1 }">
+      <div (click)="completeOrder(order.id!)" class="card" [ngClass]="{ 'in-progress': order.order.preparationStatus === 0, 'completed': (order.order.preparationStatus === 1 || order.order.preparationStatus === 2) }">
         <div>
           <h4>{{ order.id }} {{order.order.waiter.lastName}}</h4>
         </div>

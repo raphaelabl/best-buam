@@ -1,7 +1,9 @@
 package at.raphael.boundary;
 
 import at.raphael.control.OrderService;
+import at.raphael.control.PrintService;
 import at.raphael.entity.Order;
+import at.raphael.entity.dto.OrderPrintDTO;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
@@ -48,8 +50,11 @@ public class OrderResource {
                     .entity((buffetName == null)?"BuffetName":"OrderId"+" is missing")
                     .build();
         }
+        // Ist notwendig wegen der Transactionen
+        OrderPrintDTO result = orderService.DispatchOrder(buffetName, orderId);
+        if(result != null) {
+            orderService.createBillAndPrint(result);
 
-        if(orderService.DispatchOrder(buffetName, orderId)) {
             return Response.ok().build();
         }
 

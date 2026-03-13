@@ -1,9 +1,9 @@
 export const environment = {
   production: true,
-  API_URL: "http://100.94.234.78:8080/",
-  WS_URL: "ws://100.94.234.78:8080/",
+  API_URL: "https://bestell.ffbruckmuehl.at/api/",
+  WS_URL: "wss://bestell.ffbruckmuehl.at/api/",
   keycloak: {
-    issuer: 'http://100.94.234.78:8081/auth/',
+    issuer: 'https://bestell.ffbruckmuehl.at/auth/',
     realm: 'bestbuam',
     clientId: 'bestbuam-frontend'
   }
