@@ -17,8 +17,8 @@ public class Item extends PanacheEntity {
         this.price = newEntity.price;
     }
 
-    public Item persistOrUpdate(){
-        if(this.id == null || this.id == 0) {
+    public Item persistOrUpdate() {
+        if (this.id == null || this.id == 0) {
             this.id = null;
 
             this.persist();

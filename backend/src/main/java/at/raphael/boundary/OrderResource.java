@@ -1,16 +1,20 @@
 package at.raphael.boundary;
 
+import java.util.List;
+
 import at.raphael.control.OrderService;
-import at.raphael.control.PrintService;
 import at.raphael.entity.Order;
 import at.raphael.entity.dto.OrderPrintDTO;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.*;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
-import java.util.List;
 
 @Path("order")
 public class OrderResource {

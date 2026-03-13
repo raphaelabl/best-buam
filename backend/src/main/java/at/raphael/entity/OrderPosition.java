@@ -8,18 +8,17 @@ import jakarta.persistence.ManyToOne;
 public class OrderPosition extends PanacheEntity {
 
     public String editId;
+    public int amount;
+    public String spezialText;
+    public boolean isSpezial;
+    public boolean dispached;
 
     @ManyToOne
     public Item item;
 
-    public int amount;
-    public String spezialText;
-    public boolean isSpezial;
-
-    public boolean dispached;
-
 
     public OrderPosition() {
+        // Nessecery for Panache entity
     }
 
     public void updateEntity(OrderPosition newEntity) {
@@ -31,8 +30,8 @@ public class OrderPosition extends PanacheEntity {
         this.item = newEntity.item.persistOrUpdate();
     }
 
-    public OrderPosition persistOrUpdate(){
-        if(this.id == null || this.id == 0) {
+    public OrderPosition persistOrUpdate() {
+        if (this.id == null || this.id == 0) {
             this.id = null;
             this.persist();
 
