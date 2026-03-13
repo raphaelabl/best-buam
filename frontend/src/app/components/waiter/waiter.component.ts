@@ -78,7 +78,6 @@ export class WaiterComponent implements OnInit {
     const dialogRef = this.dialog.open(this.editOrderTemplate);
 
     dialogRef.afterClosed().subscribe(() => {
-
       if(this.specialOrderPosition.editId === null || this.specialOrderPosition.editId === undefined || this.specialOrderPosition.editId === ""){
         this.specialOrderPosition.editId = this.getNextSpezialId(this.specialOrderPosition.item!.id!.toString());
         this.specialOrderPosition.isSpezial = true;
@@ -99,10 +98,10 @@ export class WaiterComponent implements OnInit {
     const currentId = "S_"+itemId;
 
     if(this.newOrder.positions.some(element => currentId === element.editId)){
-      return currentId;
+      return this.getNextSpezialId(currentId);
     }
+    return currentId;
 
-    return this.getNextSpezialId(currentId);
   }
 
   removeOrderPostion(editId: string){
