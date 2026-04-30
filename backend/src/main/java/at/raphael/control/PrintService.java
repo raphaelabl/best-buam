@@ -128,6 +128,7 @@ public class PrintService {
                     os.flush();
 
                 } catch (Exception e) {
+                    log.info("Exception: " + e.getMessage());
                 }
 
             });
@@ -141,8 +142,9 @@ public class PrintService {
             executor.execute(() -> {
                 log.info(printerIp + ":" + printerPort);
                 log.info(stringToPrint);
+                log.info("IN REAL");
 
-                /*try (Socket socket = new Socket(printerIp, Integer.parseInt(printerPort));
+                try (Socket socket = new Socket(printerIp, printerPort);
                      OutputStream os = socket.getOutputStream()) {
 
                     os.write("\u001B@".getBytes(StandardCharsets.UTF_8)); // Reset Drucker
@@ -152,10 +154,9 @@ public class PrintService {
                     os.write("\u001Bm".getBytes(StandardCharsets.UTF_8)); // Cutter-Befehl für Papierabschneiden
                     os.flush();
 
-                    return true;
                 } catch (Exception e) {
-                    return false;
-                }*/
+                    log.info("Exception: " + e.getMessage());
+                }
 
             });
         }

@@ -24,9 +24,15 @@ public class OrderResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
     public Response postOrder(Order order) {
-        return orderService.processOrder(order);
+        List<OrderPrintDTO> prints = orderService.processOrder(order);
+
+        for(OrderPrintDTO p : prints) {
+            orderService.createBillAndPrint(p);
+        }
+
+        return Response.ok(order).build();
+
     }
 
     @GET

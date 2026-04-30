@@ -1,9 +1,6 @@
 package at.raphael.control;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.jboss.logging.Logger;
@@ -32,22 +29,26 @@ public class OrderService {
     @Inject
     Logger log;
 
-    public Response processOrder(Order order){
+
+    @Transactional
+    public List<OrderPrintDTO> processOrder(Order order){
 
         Order persisted = order.persistOrder();
 
         if(persisted == null) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Order is already persited").build();
+            return Collections.emptyList();
         }
 
         List<Buffet> inOrderIncludedBuffets = getBuffetsFromOrder(persisted);
 
         orderWebsockets.sendOrderToAllClients(order);
 
+        List<OrderPrintDTO> orderPrintDTOS = new ArrayList<>();
+
         for (Buffet buffet : inOrderIncludedBuffets) {
             if(!orderWebsockets.isBuffetActive(buffet.id)) {
                 OrderPrintDTO printDTO = DispatchOrder(buffet.login, persisted.id);
-                createBillAndPrint(printDTO);
+                orderPrintDTOS.add(printDTO);
 
                 /*List<OrderPosition> positions = printService.createBillAndPrint(order, buffet);
 
@@ -62,7 +63,7 @@ public class OrderService {
             }
         }
 
-        return Response.ok(order).build();
+        return orderPrintDTOS;
 
     }
 
