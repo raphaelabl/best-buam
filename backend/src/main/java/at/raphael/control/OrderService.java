@@ -173,7 +173,10 @@ public class OrderService {
                 .map(printer -> new PrinterDTO(printer.name, printer.ipAddress, Integer.parseInt(printer.port)))
                 .toList();
 
-        return new OrderPrintDTO(order.id, order.tableNr, order.waiter.firstName + " " + order.waiter.lastName,buffet.name,positions, printerDTOList);
+        double totalPrice = orderPositions.stream()
+                        .map(element -> element.amount * element.item.price).reduce(0.0, Double::sum);
+
+        return new OrderPrintDTO(order.id, order.tableNr, order.waiter.firstName + " " + order.waiter.lastName,buffet.name, totalPrice,positions, printerDTOList);
     }
 
 

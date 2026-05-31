@@ -2,6 +2,7 @@ package at.raphael.control;
 
 import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -91,8 +92,7 @@ public class PrintService {
         // Erzeuge Rechnung für Buffet
         StringBuilder bill = new StringBuilder();
         bill.append("Tisch: ").append(printDTO.tableNr()).append("\n")
-                .append("Kellner: ").append(printDTO.waiterName())
-                .append("Ausgabe: ").append(printDTO.buffetName()).append("\n");
+            .append("Ausgabe: ").append(printDTO.buffetName()).append("\n");
 
         for (PositionDTO position : printDTO.positions()) {
             bill.append(position.amount())
@@ -104,11 +104,12 @@ public class PrintService {
                 bill.append("    Extra: ").append(position.spezialText()).append("\n");
             }
         }
-        bill.append("\n\n\n");
+        bill.append("\n \n");
 
+        bill.append("Gesamtbetrag: ").append(printDTO.price()).append("€ \n \n \n");
         return bill.toString();
     }
-
+    // NO USAGE ANYMORE
     void sendToPrintersFromBuffet(String stringToPrint, Buffet buffet) {
         for(Printer p : buffet.printers) {
             String printerIp = p.ipAddress;
@@ -140,16 +141,16 @@ public class PrintService {
             String printerIp = p.ipAddress();
             int printerPort = p.port();
             executor.execute(() -> {
-                log.info(printerIp + ":" + printerPort);
-                log.info(stringToPrint);
-                log.info("IN REAL");
 
                 try (Socket socket = new Socket(printerIp, printerPort);
-                     OutputStream os = socket.getOutputStream()) {
+                    OutputStream os = socket.getOutputStream()) {
+                    os.write("\u001B@".getBytes());
 
-                    os.write("\u001B@".getBytes(StandardCharsets.UTF_8)); // Reset Drucker
-
-                    os.write(stringToPrint.getBytes(StandardCharsets.UTF_8));
+                    os.write(new byte[]{0x1D, 0x21, 0x11});
+                    os.write(new byte[]{0x1B, 0x74, 19});
+                    Charset charset = Charset.forName("CP858");
+                    os.write(stringToPrint.getBytes(charset));
+                    os.write(new byte[]{0x1B, 0x33, 60});
                     os.write("\u001Bd\u0003".getBytes(StandardCharsets.UTF_8)); // 3 Zeilen vorschieben
                     os.write("\u001Bm".getBytes(StandardCharsets.UTF_8)); // Cutter-Befehl für Papierabschneiden
                     os.flush();
