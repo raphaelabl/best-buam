@@ -18,11 +18,11 @@
         <hr>
         <div class="list-group">
           <div *ngFor="let item of selectedBuffet.items" style="display: inline-flex; flex-direction: row; align-items: center; justify-content: space-between">
-            <button class="list-group-item list-group-item-action"
+            <button class="list-group-item list-group-item-action" [disabled]="item.soldOut" [ngClass]="(item.soldOut)?'itemSoldOut':''"
                     (click)="addToOrder({item})">
-              {{ item.name }} - {{ item.price | currency:'EUR' }}
+              {{(item.soldOut)?'Ausverkauft':''}} {{ item.name }} - {{ item.price | currency:'EUR' }}
             </button>
-            <button class="btn btn-sm btn-warning" style="margin-top:0 !important; margin-left: 1rem;"  (click)="specialOrder({item: item})"><i class="fa fa-edit"></i></button>
+            <button class="btn btn-sm btn-warning" [disabled]="item.soldOut" style="margin-top:0 !important; margin-left: 1rem;"  (click)="specialOrder({item: item})"><i class="fa fa-edit"></i></button>
           </div>
         </div>
       </div>

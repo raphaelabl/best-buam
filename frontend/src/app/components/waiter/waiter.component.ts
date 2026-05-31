@@ -239,6 +239,9 @@ export class WaiterComponent implements OnInit {
           this.paidAmount = 0;
           this.specialOrderPosition = {}
           this.pressedOnce = false;
+
+          this.loadAllData();
+
         },
         error: err => {
           console.log(err);
