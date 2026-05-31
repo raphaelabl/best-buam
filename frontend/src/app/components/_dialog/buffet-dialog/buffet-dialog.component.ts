@@ -62,6 +62,20 @@ export class BuffetDialogComponent implements OnInit {
       }
     })
   }
+
+
+  soldOut(itemId: number) {
+
+    let idx = this.newBuffet!.items.findIndex(element => element.id === itemId)!;
+
+    this.http.postSoldOut(itemId, !this.newBuffet!.items![idx].soldOut).subscribe({
+      next: data => {
+        if(data){
+          this.newBuffet!.items![idx].soldOut = !this.newBuffet!.items![idx].soldOut!;
+        }
+      }
+    })
+  }
   //endregion
 
 

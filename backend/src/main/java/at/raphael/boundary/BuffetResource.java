@@ -2,10 +2,12 @@ package at.raphael.boundary;
 
 
 import at.raphael.entity.Buffet;
+import at.raphael.entity.Item;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToUrl;
 
 import java.util.List;
 
@@ -22,6 +24,21 @@ public class BuffetResource {
         return Response.ok(buffet).build();
     }
 
+
+
+    @GET
+    @Path("/soldOut")
+    @Transactional
+    public Response postSoldOut(@QueryParam("itemId") long itemId, @QueryParam("soldOut") boolean soldOut) {
+        Item item = Item.findById(itemId);
+
+        if(item != null && item.isPersistent()) {
+            item.soldOut = soldOut;
+            return Response.ok(true).build();
+        }
+
+        return Response.ok(false).build();
+    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

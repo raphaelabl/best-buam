@@ -42,7 +42,10 @@
       <ul class="list-group">
         <li class="list-group-item" *ngFor="let item of newBuffet!.items" (click)="editItem(item.id!)">
           <strong>{{item.name}}</strong> {{item.price}}
-          <button class="btn btn-danger btn-sm float-end" (click)="removeItem(item!.id!)">Entfernen</button>
+          <div>
+            <button class="btn btn-danger btn-sm float-end" style="margin-left: 3px" (click)="removeItem(item!.id!)">Entfernen</button>
+            <button class="btn btn-sm float-end" (click)="soldOut(item!.id!)" [ngClass]="(item.soldOut)?'btn-warning':'btn-success'">{{(item.soldOut)?"Ausverkauft":"Verfügbar"}}</button>
+          </div>
         </li>
       </ul>
     </div>

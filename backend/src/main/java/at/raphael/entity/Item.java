@@ -8,6 +8,7 @@ public class Item extends PanacheEntity {
 
     public String name;
     public double price;
+    public boolean soldOut;
 
     public Item() {
     }
@@ -15,6 +16,7 @@ public class Item extends PanacheEntity {
     public void updateEntity(Item newEntity) {
         this.name = newEntity.name;
         this.price = newEntity.price;
+        this.soldOut = newEntity.soldOut;
     }
 
     public Item persistOrUpdate() {

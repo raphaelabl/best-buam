@@ -50,6 +50,11 @@ export class HttpService {
     return this.http.post<Buffet>(environment.API_URL + "buffet", newBuffet)
   }
 
+  postSoldOut(itemId: number, soldOut: boolean): Observable<boolean>{
+
+    return this.http.get<boolean>(environment.API_URL + "buffet/soldOut", {params: {itemId: itemId, soldOut: soldOut}})
+  }
+
 
   // Order Resource
   postOrder(newOrder: Order): Observable<Order>{
