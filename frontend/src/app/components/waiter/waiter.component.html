@@ -105,13 +105,15 @@
             <h3>Bestellungen: </h3>
             <div class="card-body" style=" max-height: 25vh; overflow-y: auto;">
               <ul class="list-group" >
-                <li class="list-group-item" *ngFor="let order of cloneArticles" style="display: inline-flex; flex-direction: row; align-items: center; justify-content: space-between">
-                  {{order.amount}} x {{ order.item!.name }} - {{ (order.item!.price! * order.amount!) | currency:'EUR' }}
-                  {{order.spezialText?.substring(0,10)}}
-                  <div style="display: flex; justify-content: space-between;">
-                    <button class="btn btn-sm btn-success" style="margin-top:0 !important; margin-left: 0.5rem;" (click)="addToBill(order)"><i class="fa fa-add"></i></button>
-                  </div>
-                </li>
+                <ng-container *ngFor="let order of cloneArticles">
+                  <li class="list-group-item" *ngIf="order.amount! > 0" style="display: inline-flex; flex-direction: row; align-items: center; justify-content: space-between">
+                      {{order.amount}} x {{ order.item!.name }} - {{ (order.item!.price! * order.amount!) | currency:'EUR' }}
+                      {{order.spezialText?.substring(0,10)}}
+                      <div style="display: flex; justify-content: space-between;">
+                        <button class="btn btn-sm btn-success" style="margin-top:0 !important; margin-left: 0.5rem;" (click)="addToBill(order)"><i class="fa fa-add"></i></button>
+                      </div>
+                  </li>
+                </ng-container>
               </ul>
             </div>
             <h1>Artikel zu Zahlen</h1>

@@ -3,11 +3,14 @@ import { timer } from 'rxjs';
 import {KeycloakService} from "keycloak-angular";
 import {HttpService} from "../../services/http.service";
 import {PreparationDto} from "../../models/dto/preparation-dto";
+import {NgClass} from "@angular/common";
 
 @Component({
   selector: 'app-preparation',
   standalone: true,
-  imports: [],
+  imports: [
+    NgClass
+  ],
   templateUrl: './preparation.component.html',
   styleUrl: './preparation.component.scss'
 })

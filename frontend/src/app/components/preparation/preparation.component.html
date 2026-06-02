@@ -2,10 +2,10 @@
   <div class="item-table">
     @for (preperation of preparations; track preperation.itemName) {
       <div class="item-div">
-        <span class="itemName">{{preperation.itemName}}</span>
+        <div class="itemName" [ngClass]="(preperation.itemName.length<15)?'fontSizeLarge':'fontSizeSmall'">{{preperation.itemName.substring(0, 35)}}</div>
         <div class="preparationView">
           <span class="itemDispatched">{{preperation.dispatchedAmount}}</span>
-          <span class="itemName">|</span>
+          <span class="itemName fontSizeLarge">|</span>
           <span class="itemPreparation">{{preperation.preparationAmount}}</span>
         </div>
       </div>
