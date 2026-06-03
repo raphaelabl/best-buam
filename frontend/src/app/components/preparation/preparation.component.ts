@@ -16,7 +16,7 @@ import {NgClass} from "@angular/common";
 })
 export class PreparationComponent {
 
-  timerSource = timer(0, 20000);
+  timerSource = timer(0, 7500);
   subsribe = this.timerSource.subscribe(val => this.timerSubscription());
 
   buffetName = ""
@@ -39,6 +39,20 @@ export class PreparationComponent {
         }
       });
     }
+  }
+
+  get gridColumns(): string {
+    const count = this.preparations.length;
+
+    if (count <= 15) {
+      return 'repeat(2, 1fr)';
+    }
+
+    if (count <= 20) {
+      return 'repeat(3, 1fr)';
+    }
+
+    return 'repeat(4, 1fr)';
   }
 
 }

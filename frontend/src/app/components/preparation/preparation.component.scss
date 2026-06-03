@@ -2,16 +2,10 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  gap: 10px;
-  border-bottom: 2px solid black;
-  padding: 3rem;
+  border-bottom: 1px solid black;
+  border-right: 1px solid black;
+  padding: 0.5rem;
 }
-
-.itemName{
-  font-weight: bold;
-
-}
-
 .fontSizeLarge{
   font-size: 3rem;
 }
@@ -22,24 +16,35 @@
 
 .itemDispatched{
   font-weight: bold;
-  font-size: 3rem;
   color: green;
 }
 
 .itemPreparation{
   font-weight: bold;
-  font-size: 3rem;
   color: red;
 }
 
 .item-table{
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
 }
 
 .preparationView{
   display: flex;
   flex-direction: row;
   gap: 3px;
+}
+
+.preparation-grid {
+  display: grid;
+
+  grid-template-columns: repeat(
+    auto-fit,
+      minmax(500px, 1fr)
+  );
+}
+
+.itemName {
+  font-size: clamp(1.2rem, 2vw, 4rem);
+  font-weight: bold;
 }
