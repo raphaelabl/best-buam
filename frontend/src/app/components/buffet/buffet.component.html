@@ -16,7 +16,7 @@
         <div class="card-body">
           <ul class="list-group">
             <li class="list-group-item item-name" *ngFor="let position of order.order.positions">
-              {{ position.item!.name }} x{{ position.amount }}
+              {{ position.amount }}|   {{ position.item!.name }}
               <span *ngIf="position.isSpezial">({{ position.spezialText }})</span>
             </li>
           </ul>
