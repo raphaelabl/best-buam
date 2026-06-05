@@ -7,10 +7,8 @@
   </div>
   <div *ngIf="newOrder.tableNr !== null && newOrder.tableNr !== undefined && newOrder.tableNr !== 0">
     <!-- Artikel Liste für Bestellung -->
-    <div class="card mt-4">
-      <div class="card-header">
-        <h3>Artikel wählen</h3>
-      </div>
+    <div class="mt-4">
+      <h3>Artikel wählen</h3>
       <div class="card-body" style=" max-height: 300px; overflow-y: auto;">
         <div style="display: flex; flex-direction: row; justify-content: space-around" >
           <button class="btn btn-primary" (click)="selectedBuffet = buffet" *ngFor="let buffet of currentParty.buffets">{{buffet.name}}</button>
@@ -27,13 +25,11 @@
         </div>
       </div>
     </div>
-
+    <hr>
     <!-- Aktuelle Bestellung -->
-    <div class="card mt-4">
-      <div class="card-header">
+    <div class="mt-4">
         <h3>Aktuelle Bestellung</h3>
-      </div>
-      <div class="card-body" style=" max-height: 300px; overflow-y: auto;">
+      <div  style=" max-height: 300px; overflow-y: auto;">
         <ul class="list-group" >
           <li class="list-group-item" *ngFor="let order of newOrder!.positions" style="display: inline-flex; flex-direction: row; align-items: center; justify-content: space-between">
             {{order.amount}} x {{ order.item!.name }} - {{ (order.item!.price! * order.amount!) | currency:'EUR' }}
