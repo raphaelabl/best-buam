@@ -1,7 +1,7 @@
 
   <div class="preparation-grid" [style.grid-template-columns]="gridColumns">
     @for (preperation of preparations; track preperation.itemName) {
-      <div class="item-div">
+      <div (click)="cachelClick(preperation.itemName)" class="item-div" [ngStyle]="{'background': cachelColors[preperation.color]}">
         <div class="itemName">
           {{ preperation.itemName }}
         </div>
